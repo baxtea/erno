@@ -1,0 +1,8 @@
+{
+    "files": ["**/*.js", "index.html"],
+    "server": {
+        "baseDir": ".",
+        "directory": true
+    },
+    "startPath": "index.html"
+}

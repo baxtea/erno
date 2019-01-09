@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "sourceMap": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    },
+    "include": [
+        "scripts/**/*.ts",
+        "../Common/tsm/*.ts"
+    ]
+}

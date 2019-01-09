@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6", // es6 grants access to the Map object used in CubeRenderer
         "module": "amd",
         "sourceMap": false,
         "noUnusedLocals": true,

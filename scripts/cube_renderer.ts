@@ -1,7 +1,8 @@
-import { CubeState } from "./cube_state";
+import { CubeState, Cubie } from "./cube_state";
 import mat4 from "../../Common/tsm/mat4";
 import fscreen from "./fscreen";
 import vec3 from "../../Common/tsm/vec3";
+import quat from "../../Common/tsm/quat";
 
 function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src: string) {
     const vs = gl.createShader(gl.VERTEX_SHADER);
@@ -33,8 +34,6 @@ function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src
     return program;
 }
 
-// TODO: create alternate renderers/shaders for fancy-shaded
-
 class CubeRenderer {
     gl: WebGLRenderingContext;
     canvas: HTMLCanvasElement;
@@ -47,8 +46,11 @@ class CubeRenderer {
 
     shader: WebGLProgram;
     uMVP: WebGLUniformLocation;
+    uColor: WebGLUniformLocation;
     vPosition: number;
-    vColor: number;
+
+    quad: WebGLBuffer;
+    face_colors: vec3[];
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -69,27 +71,48 @@ class CubeRenderer {
         gl.clearColor(0.5, 0.5, 0.5, 1);
         gl.enable(gl.DEPTH_TEST);
 
+        // Create the quad used to render each sticker
+        // No index buffer, counter-clockwise so they survive backface culling
+        // ? Not sure -0.5 makes the most sense for the z position
+        let verts = new Float32Array([
+            -0.4, -0.4, -0.4,
+             0.4, -0.4, -0.4,
+             0.4,  0.4, -0.4,
+
+            -0.4, -0.4, -0.4,
+             0.4,  0.4, -0.4,
+            -0.4,  0.4, -0.4,
+        ]);
+        this.quad = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
+        gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+
+        // Fill in the dictionary used to map each face to an RGB color
+        function hex_to_rgb(hex: number) {
+            let r = (((hex) >> 16) & 0xFF) / 255.0;
+            let g = (((hex) >> 8) & 0xFF) / 255.0;
+            let b = ((hex) & 0xFF) / 255.0;
+            return new vec3([r, g, b]);
+        }
+        //                   red      orange    yellow     green     blue      white
+        this.face_colors = [0xb71234, 0xFF5800, 0xFFD500, 0x009B48, 0x0046AD, 0xFFFFFF].map(hex_to_rgb);
+
         // Declare the shader code
         // For now, they're unlit, and colored per-vertex
         let vs = `
 attribute vec4 vPosition;
-attribute vec3 vColor;
-
 uniform mat4 uMVP; // Pre-multiplied model,view,projection matrix
-
-varying vec3 fColor;
 
 void main() {
     gl_Position = uMVP*vPosition;
-    fColor = vColor;
 }`;
 
         let fs = `
 precision mediump float; // Fragment shaders have no default float precision
-varying vec3 fColor;
+uniform vec3 uColor;
 
 void main() {
-    gl_FragColor = vec4(fColor, 1.0);
+    gl_FragColor = vec4(uColor, 1.0);
 }`;
 
         // Compile into a linked program and extract locations for shader variables
@@ -97,12 +120,12 @@ void main() {
         gl.useProgram(this.shader);
 
         this.uMVP = gl.getUniformLocation(this.shader, "uMVP");
+        this.uColor = gl.getUniformLocation(this.shader, "uColor");
         this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
-        this.vColor = gl.getAttribLocation(this.shader, "vColor");
 
         // Inititialize the model, view, and projection matrices
         this.model = mat4.identity;
-        this.view = mat4.lookAt(new vec3([-2, 0.5, 0.5]), vec3.zero);
+        this.view = mat4.lookAt(new vec3([2, 2, -5]), vec3.zero);
         this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
 
@@ -125,20 +148,77 @@ void main() {
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.projection = mat4.perspective(60, this.canvas.width/this.canvas.height, 0.1, 100.0);
     }
+    /**
+     * ! Requires this.quad to be bound to gl.ARRAY_BUFFER and position attribute enabled
+     */
+    private draw_cubie(cubie: Cubie): void {
+        let gl = this.gl;
+        let vp = this.projection.copy().multiply(this.view);
+
+        for (let x = 0; x <= 1; ++x) {
+            let mirror = quat.fromAxisAngle(vec3.up, Math.PI/2 + Math.PI*x);
+            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_translation = mat4.identity.copy().translate(cubie.position);
+
+            var model = face_translation.multiply(face_orientation.toMat4());
+            let mvp = vp.copy().multiply(model);
+            gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
+
+            if (cubie.faces[x] != null) {
+                gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[x]].xyz);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+        }
+        for (let y = 0; y <= 1; ++y) {
+            let mirror = quat.fromAxisAngle(vec3.right, -Math.PI/2 + Math.PI*y);
+            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_translation = mat4.identity.copy().translate(cubie.position);
+
+            var model = face_translation.multiply(face_orientation.toMat4());
+            let mvp = vp.copy().multiply(model);
+            gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
+
+            if (cubie.faces[2 + y] != null) {
+                gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[2 + y]].xyz);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+        }
+        for (let z = 0; z <= 1; ++z) {
+            let mirror = quat.fromAxisAngle(vec3.up, Math.PI*z);
+            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_translation = mat4.identity.copy().translate(cubie.position);
+
+            var model = face_translation.multiply(face_orientation.toMat4());
+            let mvp = vp.copy().multiply(model);
+            gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
+
+            if (cubie.faces[4 + z] != null) {
+                gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[4 + z]].xyz);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+        }
+    }
 
     draw_state(state: CubeState): void {
         let gl = this.gl;
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        let mvp = this.projection.multiply(this.view).multiply(this.model);
-        gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
+        gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(this.vPosition);
 
-        // TODO render each cubie
+        // this.draw_cubie(state.cubies[0])
+        state.cubies.forEach(cubie => {
+            this.draw_cubie(cubie);
+        });
+
+        gl.disableVertexAttribArray(this.vPosition);
     }
 
-    interpolate(state1: CubeState, state2: CubeState, t: number): void {
-        // ? Move to cube_state.ts
-    }
+    // TODO implement interpolation
+    // interpolate(state1: CubeState, state2: CubeState, t: number): void {
+    //     // ? Move to cube_state.ts
+    // }
 }
 
 export {

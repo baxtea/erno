@@ -10,27 +10,27 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
         Face[Face["Blue"] = 4] = "Blue";
         Face[Face["White"] = 5] = "White";
     })(Face || (Face = {}));
-    var Cubie = /** @class */ (function () {
-        function Cubie(offset, faces) {
+    exports.Face = Face;
+    class Cubie {
+        constructor(offset, faces, orientation = quat_1.default.identity) {
             this.position = offset;
-            this.orientation = quat_1.default.identity;
+            this.orientation = orientation;
             this.faces = faces;
         }
-        return Cubie;
-    }());
+    }
     exports.Cubie = Cubie;
     /**
      * Immutable class to store one state of a Rubik's Cube
      */
-    var CubeState = /** @class */ (function () {
-        function CubeState(cubies) {
+    class CubeState {
+        constructor(cubies) {
             this.cubies = cubies;
         }
         ;
         // White on top, green facing the camera
-        CubeState.default = function () {
-            // * remember -1 in z is towards camera
-            var cubies = [
+        static default() {
+            // * remember +1 in z is towards camera
+            let cubies = [
                 // Left slice (row-major order)
                 new Cubie(new vec3_1.default([-1, -1, -1]), [Face.Orange, null, Face.Yellow, null, Face.Green, null]),
                 new Cubie(new vec3_1.default([-1, -1, 0]), [Face.Orange, null, Face.Yellow, null, null, null]),
@@ -63,8 +63,7 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
                 new Cubie(new vec3_1.default([1, 1, 1]), [null, Face.Red, null, Face.White, null, Face.Blue]),
             ];
             return new CubeState(cubies);
-        };
-        return CubeState;
-    }());
+        }
+    }
     exports.CubeState = CubeState;
 });

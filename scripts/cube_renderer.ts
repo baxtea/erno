@@ -216,7 +216,7 @@ void main() {
 
         // Inititialize the model, view, and projection matrices
         this.model = mat4.identity;
-        this.view = mat4.lookAt(new vec3([2, 2, -5]), vec3.zero);
+        this.view = mat4.lookAt(new vec3([2, 2, 5]), vec3.zero);
         this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
 
@@ -227,9 +227,9 @@ void main() {
      */
     toggle_fullscreen(): void {
         if (fscreen.fullscreenElement == null) {
-            fscreen.requestFullscreen(this.canvas);
             this.canvas.width = screen.width;
             this.canvas.height = screen.height;
+            fscreen.requestFullscreen(this.canvas);
         }
         else {
             fscreen.exitFullscreen();

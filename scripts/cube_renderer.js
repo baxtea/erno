@@ -178,7 +178,7 @@ void main() {
             this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
             // Inititialize the model, view, and projection matrices
             this.model = mat4_1.default.identity;
-            this.view = mat4_1.default.lookAt(new vec3_1.default([2, 2, -5]), vec3_1.default.zero);
+            this.view = mat4_1.default.lookAt(new vec3_1.default([2, 2, 5]), vec3_1.default.zero);
             this.projection = mat4_1.default.perspective(60, canvas.width / canvas.height, 0.1, 100.0);
         }
         /**
@@ -188,9 +188,9 @@ void main() {
          */
         toggle_fullscreen() {
             if (fscreen_1.default.fullscreenElement == null) {
-                fscreen_1.default.requestFullscreen(this.canvas);
                 this.canvas.width = screen.width;
                 this.canvas.height = screen.height;
+                fscreen_1.default.requestFullscreen(this.canvas);
             }
             else {
                 fscreen_1.default.exitFullscreen();

@@ -37,37 +37,37 @@ class CubeState {
         // * remember +1 in z is towards camera
         let cubies = [
             // Left slice (row-major order)
-            new Cubie(new vec3([-1, -1, -1]), [Face.Orange, null, Face.Yellow, null, Face.Green, null]),
+            new Cubie(new vec3([-1, -1, -1]), [Face.Orange, null, Face.Yellow, null, Face.Blue, null]),
             new Cubie(new vec3([-1, -1,  0]), [Face.Orange, null, Face.Yellow, null, null, null]),
-            new Cubie(new vec3([-1, -1,  1]), [Face.Orange, null, Face.Yellow, null, null, Face.Blue]),
-            new Cubie(new vec3([-1,  0, -1]), [Face.Orange, null, null, null, Face.Green, null]),
+            new Cubie(new vec3([-1, -1,  1]), [Face.Orange, null, Face.Yellow, null, null, Face.Green]),
+            new Cubie(new vec3([-1,  0, -1]), [Face.Orange, null, null, null, Face.Blue, null]),
             new Cubie(new vec3([-1,  0,  0]), [Face.Orange, null, null, null, null, null]),
-            new Cubie(new vec3([-1,  0,  1]), [Face.Orange, null, null, null, null, Face.Blue]),
-            new Cubie(new vec3([-1,  1, -1]), [Face.Orange, null, null, Face.White, Face.Green, null]),
+            new Cubie(new vec3([-1,  0,  1]), [Face.Orange, null, null, null, null, Face.Green]),
+            new Cubie(new vec3([-1,  1, -1]), [Face.Orange, null, null, Face.White, Face.Blue, null]),
             new Cubie(new vec3([-1,  1,  0]), [Face.Orange, null, null, Face.White, null, null]),
-            new Cubie(new vec3([-1,  1,  1]), [Face.Orange, null, null, Face.White, null, Face.Blue]),
+            new Cubie(new vec3([-1,  1,  1]), [Face.Orange, null, null, Face.White, null, Face.Green]),
 
             // Mid slice (row-major order)
-            new Cubie(new vec3([ 0, -1, -1]), [null, null, Face.Yellow, null, Face.Green, null]),
+            new Cubie(new vec3([ 0, -1, -1]), [null, null, Face.Yellow, null, Face.Blue, null]),
             new Cubie(new vec3([ 0, -1,  0]), [null, null, Face.Yellow, null, null, null]),
-            new Cubie(new vec3([ 0, -1,  1]), [null, null, Face.Yellow, null, null, Face.Blue]),
-            new Cubie(new vec3([ 0,  0, -1]), [null, null, null, null, Face.Green, null]),
+            new Cubie(new vec3([ 0, -1,  1]), [null, null, Face.Yellow, null, null, Face.Green]),
+            new Cubie(new vec3([ 0,  0, -1]), [null, null, null, null, Face.Blue, null]),
             new Cubie(new vec3([ 0,  0,  0]), [null, null, null, null, null, null]),
-            new Cubie(new vec3([ 0,  0,  1]), [null, null, null, null, null, Face.Blue]),
-            new Cubie(new vec3([ 0,  1, -1]), [null, null, null, Face.White, Face.Green, null]),
+            new Cubie(new vec3([ 0,  0,  1]), [null, null, null, null, null, Face.Green]),
+            new Cubie(new vec3([ 0,  1, -1]), [null, null, null, Face.White, Face.Blue, null]),
             new Cubie(new vec3([ 0,  1,  0]), [null, null, null, Face.White, null, null]),
-            new Cubie(new vec3([ 0,  1,  1]), [null, null, null, Face.White, null, Face.Blue]),
+            new Cubie(new vec3([ 0,  1,  1]), [null, null, null, Face.White, null, Face.Green]),
 
             // Right slice (row-major order)
-            new Cubie(new vec3([ 1, -1, -1]), [null, Face.Red, Face.Yellow, null, Face.Green, null]),
+            new Cubie(new vec3([ 1, -1, -1]), [null, Face.Red, Face.Yellow, null, Face.Blue, null]),
             new Cubie(new vec3([ 1, -1,  0]), [null, Face.Red, Face.Yellow, null, null, null]),
-            new Cubie(new vec3([ 1, -1,  1]), [null, Face.Red, Face.Yellow, null, null, Face.Blue]),
-            new Cubie(new vec3([ 1,  0, -1]), [null, Face.Red, null, null, Face.Green, null]),
+            new Cubie(new vec3([ 1, -1,  1]), [null, Face.Red, Face.Yellow, null, null, Face.Green]),
+            new Cubie(new vec3([ 1,  0, -1]), [null, Face.Red, null, null, Face.Blue, null]),
             new Cubie(new vec3([ 1,  0,  0]), [null, Face.Red, null, null, null, null]),
-            new Cubie(new vec3([ 1,  0,  1]), [null, Face.Red, null, null, null, Face.Blue]),
-            new Cubie(new vec3([ 1,  1, -1]), [null, Face.Red, null, Face.White, Face.Green, null]),
+            new Cubie(new vec3([ 1,  0,  1]), [null, Face.Red, null, null, null, Face.Green]),
+            new Cubie(new vec3([ 1,  1, -1]), [null, Face.Red, null, Face.White, Face.Blue, null]),
             new Cubie(new vec3([ 1,  1,  0]), [null, Face.Red, null, Face.White, null, null]),
-            new Cubie(new vec3([ 1,  1,  1]), [null, Face.Red, null, Face.White, null, Face.Blue]),
+            new Cubie(new vec3([ 1,  1,  1]), [null, Face.Red, null, Face.White, null, Face.Green]),
         ];
 
         return new CubeState(cubies);

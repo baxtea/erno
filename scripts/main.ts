@@ -26,10 +26,9 @@ function update() {
     let elapsed = (currentTime - lastTime)/1000.0; // Translate units from ms to seconds
     lastTime = currentTime;
 
-    // Basically a no-op at this point in time
     renderer.draw_state(state_chain[current_state])
 
     // Recurse
-    requestAnimationFrame(update);
+    //requestAnimationFrame(update);
 }
 update();

@@ -51,7 +51,7 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
             gl.enable(gl.DEPTH_TEST);
             // Create the quad used to render each sticker
             // No index buffer, counter-clockwise so they survive backface culling
-            let verts = new Float32Array([
+            let quad_verts = new Float32Array([
                 -0.5, -0.5, -0.5,
                 0.5, -0.5, -0.5,
                 0.5, 0.5, -0.5,
@@ -61,7 +61,88 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
             ]);
             this.quad = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
-            gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, quad_verts, gl.STATIC_DRAW);
+            // Create the beveled cube used to render each cubie pre-sticker (see cubie.obj for source; created in Blender)
+            let cube_verts = new Float32Array([
+                0, 0, 0,
+                0.499000, -0.432251, -0.432250,
+                0.432251, -0.499000, -0.432251,
+                0.432251, -0.432251, -0.499000,
+                0.499000, -0.432251, 0.432251,
+                0.432251, -0.432251, 0.499000,
+                0.432251, -0.499000, 0.432251,
+                -0.432251, -0.432251, 0.499000,
+                -0.499000, -0.432251, 0.432250,
+                -0.432251, -0.499000, 0.432250,
+                -0.432250, -0.432251, -0.499000,
+                -0.432250, -0.499000, -0.432251,
+                -0.499000, -0.432251, -0.432251,
+                0.432251, 0.432251, -0.499000,
+                0.432251, 0.499000, -0.432250,
+                0.499000, 0.432251, -0.432250,
+                0.432250, 0.432251, 0.499000,
+                0.499000, 0.432251, 0.432251,
+                0.432250, 0.499000, 0.432251,
+                -0.499000, 0.432251, 0.432250,
+                -0.432251, 0.432251, 0.499000,
+                -0.432251, 0.499000, 0.432250,
+                -0.499000, 0.432251, -0.432251,
+                -0.432251, 0.499000, -0.432251,
+                -0.432251, 0.432251, -0.499000,
+            ]);
+            this.cube = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.cube);
+            gl.bufferData(gl.ARRAY_BUFFER, cube_verts, gl.STATIC_DRAW);
+            let cube_indices = new Uint16Array([
+                3, 24, 13,
+                2, 9, 11,
+                8, 22, 12,
+                23, 18, 14,
+                16, 7, 5,
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9,
+                10, 11, 12,
+                13, 14, 15,
+                16, 17, 18,
+                19, 20, 21,
+                22, 23, 24,
+                1, 6, 2,
+                2, 10, 3,
+                13, 1, 3,
+                5, 9, 6,
+                17, 5, 4,
+                12, 9, 8,
+                20, 8, 7,
+                12, 24, 10,
+                14, 17, 15,
+                13, 23, 14,
+                18, 20, 16,
+                23, 19, 21,
+                15, 4, 1,
+                3, 10, 24,
+                2, 6, 9,
+                8, 19, 22,
+                23, 21, 18,
+                16, 20, 7,
+                1, 4, 6,
+                2, 11, 10,
+                13, 15, 1,
+                5, 7, 9,
+                17, 16, 5,
+                12, 11, 9,
+                20, 19, 8,
+                12, 22, 24,
+                14, 18, 17,
+                13, 24, 23,
+                18, 21, 20,
+                23, 22, 19,
+                15, 17, 4,
+            ]);
+            this.cube_indices = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cube_indices, gl.STATIC_DRAW);
+            this.cube_index_count = cube_indices.length;
             // Fill in the dictionary used to map each face to an RGB color
             function hex_to_rgb(hex) {
                 let r = (((hex) >> 16) & 0xFF) / 255.0;
@@ -120,11 +201,13 @@ void main() {
             this.projection = mat4_1.default.perspective(60, this.canvas.width / this.canvas.height, 0.1, 100.0);
         }
         /**
-         * ! Requires this.quad to be bound to gl.ARRAY_BUFFER and position attribute enabled
+         * ! Requires the position attribute enabled
          */
-        draw_cubie(cubie) {
+        draw_cubie(cubie, sticker_scale, vp) {
             let gl = this.gl;
-            let vp = this.projection.copy().multiply(this.view);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
+            gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
+            gl.uniform1f(this.uStickerScale, sticker_scale);
             for (let x = 0; x <= 1; ++x) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2 + Math.PI * x);
                 let face_orientation = mirror.multiply(cubie.orientation);
@@ -161,16 +244,21 @@ void main() {
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
             }
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.cube);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
+            gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
+            gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(mat4_1.default.identity.copy().translate(cubie.position)).all());
+            gl.uniform3f(this.uColor, 0, 0, 0);
+            gl.uniform1f(this.uStickerScale, 1.0);
+            gl.drawElements(gl.TRIANGLES, this.cube_index_count, gl.UNSIGNED_SHORT, 0);
         }
         draw_state(state, sticker_scale = 0.8) {
             let gl = this.gl;
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
-            gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(this.vPosition);
-            gl.uniform1f(this.uStickerScale, 0.8);
+            let vp = this.projection.copy().multiply(this.view);
             state.cubies.forEach(cubie => {
-                this.draw_cubie(cubie);
+                this.draw_cubie(cubie, sticker_scale, vp);
             });
             gl.disableVertexAttribArray(this.vPosition);
         }

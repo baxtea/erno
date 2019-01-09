@@ -26,6 +26,9 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
         }
         return program;
     }
+    /**
+     * More accurately, this is a sticker renderer
+     */
     class CubeRenderer {
         constructor(canvas) {
             this.canvas = canvas;
@@ -48,14 +51,13 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
             gl.enable(gl.DEPTH_TEST);
             // Create the quad used to render each sticker
             // No index buffer, counter-clockwise so they survive backface culling
-            // ? Not sure -0.5 makes the most sense for the z position
             let verts = new Float32Array([
-                -0.4, -0.4, -0.4,
-                0.4, -0.4, -0.4,
-                0.4, 0.4, -0.4,
-                -0.4, -0.4, -0.4,
-                0.4, 0.4, -0.4,
-                -0.4, 0.4, -0.4,
+                -0.5, -0.5, -0.5,
+                0.5, -0.5, -0.5,
+                0.5, 0.5, -0.5,
+                -0.5, -0.5, -0.5,
+                0.5, 0.5, -0.5,
+                -0.5, 0.5, -0.5,
             ]);
             this.quad = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
@@ -74,12 +76,13 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
             let vs = `
 attribute vec4 vPosition;
 uniform mat4 uMVP; // Pre-multiplied model,view,projection matrix
+uniform float uStickerScale;
 
 void main() {
-    gl_Position = uMVP*vPosition;
+    gl_Position = uMVP * vec4(uStickerScale*vPosition.xy, vPosition.z, 1.0);
 }`;
             let fs = `
-precision mediump float; // Fragment shaders have no default float precision
+precision highp float; // Fragment shaders have no default float precision
 uniform vec3 uColor;
 
 void main() {
@@ -90,6 +93,7 @@ void main() {
             gl.useProgram(this.shader);
             this.uMVP = gl.getUniformLocation(this.shader, "uMVP");
             this.uColor = gl.getUniformLocation(this.shader, "uColor");
+            this.uStickerScale = gl.getUniformLocation(this.shader, "uStickerScale");
             this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
             // Inititialize the model, view, and projection matrices
             this.model = mat4_1.default.identity;
@@ -158,13 +162,13 @@ void main() {
                 }
             }
         }
-        draw_state(state) {
+        draw_state(state, sticker_scale = 0.8) {
             let gl = this.gl;
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(this.vPosition);
-            // this.draw_cubie(state.cubies[0])
+            gl.uniform1f(this.uStickerScale, 0.8);
             state.cubies.forEach(cubie => {
                 this.draw_cubie(cubie);
             });

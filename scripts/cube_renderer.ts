@@ -34,6 +34,9 @@ function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src
     return program;
 }
 
+/**
+ * More accurately, this is a sticker renderer
+ */
 class CubeRenderer {
     gl: WebGLRenderingContext;
     canvas: HTMLCanvasElement;
@@ -47,6 +50,7 @@ class CubeRenderer {
     shader: WebGLProgram;
     uMVP: WebGLUniformLocation;
     uColor: WebGLUniformLocation;
+    uStickerScale: WebGLUniformLocation;
     vPosition: number;
 
     quad: WebGLBuffer;
@@ -73,15 +77,14 @@ class CubeRenderer {
 
         // Create the quad used to render each sticker
         // No index buffer, counter-clockwise so they survive backface culling
-        // ? Not sure -0.5 makes the most sense for the z position
         let verts = new Float32Array([
-            -0.4, -0.4, -0.4,
-             0.4, -0.4, -0.4,
-             0.4,  0.4, -0.4,
+            -0.5, -0.5, -0.5,
+             0.5, -0.5, -0.5,
+             0.5,  0.5, -0.5,
 
-            -0.4, -0.4, -0.4,
-             0.4,  0.4, -0.4,
-            -0.4,  0.4, -0.4,
+            -0.5, -0.5, -0.5,
+             0.5,  0.5, -0.5,
+            -0.5,  0.5, -0.5,
         ]);
         this.quad = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
@@ -102,13 +105,14 @@ class CubeRenderer {
         let vs = `
 attribute vec4 vPosition;
 uniform mat4 uMVP; // Pre-multiplied model,view,projection matrix
+uniform float uStickerScale;
 
 void main() {
-    gl_Position = uMVP*vPosition;
+    gl_Position = uMVP * vec4(uStickerScale*vPosition.xy, vPosition.z, 1.0);
 }`;
 
         let fs = `
-precision mediump float; // Fragment shaders have no default float precision
+precision highp float; // Fragment shaders have no default float precision
 uniform vec3 uColor;
 
 void main() {
@@ -121,6 +125,7 @@ void main() {
 
         this.uMVP = gl.getUniformLocation(this.shader, "uMVP");
         this.uColor = gl.getUniformLocation(this.shader, "uColor");
+        this.uStickerScale = gl.getUniformLocation(this.shader, "uStickerScale");
         this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
 
         // Inititialize the model, view, and projection matrices
@@ -199,7 +204,7 @@ void main() {
         }
     }
 
-    draw_state(state: CubeState): void {
+    draw_state(state: CubeState, sticker_scale = 0.8): void {
         let gl = this.gl;
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -207,7 +212,8 @@ void main() {
         gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.vPosition);
 
-        // this.draw_cubie(state.cubies[0])
+        gl.uniform1f(this.uStickerScale, 0.8);
+
         state.cubies.forEach(cubie => {
             this.draw_cubie(cubie);
         });

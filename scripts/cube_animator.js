@@ -31,8 +31,8 @@ define(["require", "exports", "./cube_state", "./tsm/quat", "./tsm/vec3"], funct
                 let c1 = pair[1];
                 // TODO: do radial interpolation instead of linear
                 // * Maybe that's not smart actually. Smallest distance between two orientations is probably not along a world-space axis
-                let interp_offset = vec3_1.default.mix(c0.position, c1.position, t);
                 let interp_orientation = quat_1.default.mix(c0.orientation, c1.orientation, t);
+                let interp_offset = vec3_1.default.mix(c0.position, c1.position, t); // Can probably use orientation to make this better
                 return new cube_state_1.Cubie(interp_offset, c0.faces, interp_orientation);
             });
             return new cube_state_1.CubeState(cubies);
@@ -52,7 +52,7 @@ define(["require", "exports", "./cube_state", "./tsm/quat", "./tsm/vec3"], funct
             else {
                 let advances = Math.floor(this.time / this.animation_duration);
                 this.time %= elapsed;
-                for (let i = 0; i < advances; ++i) {
+                for (let i = 0; i < advances && this.states.length > 1; ++i) {
                     this.states.shift();
                 }
             }

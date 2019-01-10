@@ -22,7 +22,7 @@ div {
 <body>
 
 <div class="expand">
-    <label for="algo-text">Type an algorithm: </label>
+    <label for="algo-text">Type an algorithm (Enter to run; Shift+Enter to invert): </label>
     <input type="text" id="algo-text" /></label>
     <!--
         F R' U' F' U L' B U' B2 U' F' R' B R2 F U L U // Cube in a cube in a cube
@@ -34,7 +34,7 @@ div {
     <button id="solve">Solve</button>
     <div class="anim-div">
         <label for="anim-time">Animation time:</label>
-        <input id="anim-time" type="range" min="0" max="1" value="0" step="0.01" />
+        <input id="anim-time" type="range" min="0" max="1" value="0.2" step="0.01" />
     </div>
 </div>
 <canvas id="gl-canvas" width="1280" height="720">

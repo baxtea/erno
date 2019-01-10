@@ -8,7 +8,7 @@ let canvas = <HTMLCanvasElement> document.getElementById("gl-canvas");
 let init_canvas_w: number = canvas.width;
 let init_canvas_h: number = canvas.height;
 let renderer = new CubeRenderer(canvas);
-let animator = new CubeAnimator();
+let animator = new CubeAnimator(0.2);
 
 // Bind F to full-screen toggle
 canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
@@ -160,6 +160,48 @@ let moves_dict = new Map([
     ["Z2",  CubeState.prototype.rotate_z2],
 ]);
 
+let inverse_dict = new Map([
+    ["R",   "R\'"],
+    ["R\'", "R"],
+    ["R2",  "R2"],
+    ["M",   "M\'"],
+    ["M\'", "M"],
+    ["M2",  "M2"],
+    ["L",   "L\'"],
+    ["L\'", "L"],
+    ["L2",  "L2"],
+
+    ["U",   "U\'"],
+    ["U\'", "U"],
+    ["U2",  "U2"],
+    ["E",   "E\'"],
+    ["E\'", "E"],
+    ["E2",  "E2"],
+    ["D",   "D\'"],
+    ["D\'", "D"],
+    ["D2",  "D2"],
+
+    ["F",   "F\'"],
+    ["F\'", "F"],
+    ["F2",  "F2"],
+    ["S",   "S\'"],
+    ["S\'", "S"],
+    ["S2",  "S2"],
+    ["B",   "B\'"],
+    ["B\'", "B"],
+    ["B2",  "B2"],
+
+    ["X",   "X\'"],
+    ["X\'", "X"],
+    ["X2",  "X2"],
+    ["Y",   "Y\'"],
+    ["Y\'", "Y"],
+    ["Y2",  "Y2"],
+    ["Z",   "Z\'"],
+    ["Z\'", "Z"],
+    ["Z2",  "Z2"],
+]);
+
 let reset_button = <HTMLButtonElement> document.getElementById("reset");
 reset_button.addEventListener("click", function(_e) {
     // current_state = CubeState.default();
@@ -167,10 +209,10 @@ reset_button.addEventListener("click", function(_e) {
 });
 
 // ? Not sure if I want to animate this or not
-// If so, would have to be at a very high speed so it couldn't be annoying
 let scramble_button = <HTMLButtonElement> document.getElementById("scramble");
 scramble_button.addEventListener("click", function(_e) {
     var scramble_string = "";
+    var solution_string = "";
 
     // Restrict the move space to only standard face operations (can still be 180*)
     let moves_arr = Array.from(moves_dict.entries())
@@ -179,17 +221,26 @@ scramble_button.addEventListener("click", function(_e) {
             return index > -1;
         });
 
-    // Reset the cube so the logged scramble string is useful even when scrambled twice
-    animator.reset();
     let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
+    var last_move = -1;
     for (let i = 0; i < num_moves; ++i) {
-        let j = Math.floor(Math.random()*moves_arr.length);
-        scramble_string += ` ${moves_arr[j][0]}`
-        let move_func = moves_arr[j][1];
+        var move_index = Math.floor(Math.random()*moves_arr.length);
+
+        // Make sure this move doesn't undo the last one
+        while (last_move > -1 && moves_arr[move_index][0] == inverse_dict.get(moves_arr[last_move][0])) {
+            move_index = Math.floor(Math.random()*moves_arr.length);
+        }
+
+        let move_func = moves_arr[move_index][1];
         animator.push_rotation(move_func);
+
+        scramble_string += ` ${moves_arr[move_index][0]}`;
+        solution_string = ` ${inverse_dict.get(moves_arr[move_index][0])}` + solution_string;
+        last_move = move_index;
     }
 
     console.log(`Scramble algorithm: ${scramble_string.substr(1)}`); // substr because the first character is always a space
+    console.log(`Solution algorithm: ${solution_string.substr(1)}`);
 });
 
 let solve_button = <HTMLButtonElement> document.getElementById("solve");
@@ -225,5 +276,33 @@ function run_text_algorithm(): void {
     if (!errors)
         animator = sandbox;
 }
-algorithm_text.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });
-canvas.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });
+
+function invert_algorithm(alg: string): string {
+    var invert = "";
+    alg.split(" ")
+        .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
+        .forEach(move_name => {
+            move_name = move_name.toUpperCase();
+            invert = ` ${inverse_dict.get(move_name)}` + invert;
+        });
+
+    return invert.substr(1);
+}
+algorithm_text.addEventListener("keydown", e => {
+    if (e.key.toLowerCase() == "enter") {
+        if (e.shiftKey) {
+            algorithm_text.value = invert_algorithm(algorithm_text.value);
+        } else {
+            run_text_algorithm();
+        }
+    }
+});
+canvas.addEventListener("keydown", e => {
+    if (e.key.toLowerCase() == "enter") {
+        if (e.shiftKey) {
+            algorithm_text.value = invert_algorithm(algorithm_text.value);
+        } else {
+            run_text_algorithm();
+        }
+    }
+});

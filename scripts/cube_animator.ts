@@ -40,11 +40,16 @@ class CubeAnimator {
                 let c0 = pair[0];
                 let c1 = pair[1];
 
-                // TODO: do radial interpolation instead of linear
-                // * Maybe that's not smart actually. Smallest distance between two orientations is probably not along a world-space axis
                 let interp_orientation = quat.mix(c0.orientation, c1.orientation, t);
-                let interp_offset = interp_orientation.multiplyVec3(c1.position);
-                //let interp_offset = vec3.mix(c0.position, c1.position, t); // Can probably use orientation to make this better: interp_orientation.multiplyVec3 doesn't work though...
+
+                let angle = Math.acos(interp_orientation.w) * 2;
+                var interp_offset = c0.position;
+
+                if (angle > 0) { // nonstatic; need to interpolate
+                    // diff = q2 * inverse(q1)
+                    let diff = interp_orientation.copy().multiply(c0.orientation.copy().conjugate());
+                    interp_offset = diff.multiplyVec3(c0.position);
+                }
 
                 return new Cubie(interp_offset, c0.faces, interp_orientation);
             });

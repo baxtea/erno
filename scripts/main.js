@@ -107,7 +107,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     });
     // Animation details
     var current_state = cube_state_1.CubeState.default();
-    // var anim_time = 0.5; // Seconds it takes for one slice action (usually a 90* rotation)
+    var anim_time = 0.0; // Seconds it takes for one slice action (usually a 90* rotation)
     // Timekeeping
     let startTime = Date.now();
     var lastTime = startTime;
@@ -122,19 +122,59 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         requestAnimationFrame(update);
     }
     update();
-    let reset = document.getElementById("reset");
-    reset.addEventListener("click", function (_e) {
+    let reset_button = document.getElementById("reset");
+    reset_button.addEventListener("click", function (_e) {
         current_state = cube_state_1.CubeState.default();
     });
-    let scramble = document.getElementById("scramble");
-    scramble.addEventListener("click", function (_e) {
-        alert("Scramble not implemented yet");
+    let scramble_button = document.getElementById("scramble");
+    scramble_button.addEventListener("click", function (_e) {
+        // ? Not sure if I want to animate this or not
+        // If so, would have to be at a very high speed so it couldn't be
+        let moves = [
+            cube_state_1.CubeState.prototype.rotate_r,
+            cube_state_1.CubeState.prototype.rotate_r_ccw,
+            cube_state_1.CubeState.prototype.rotate_r2,
+            cube_state_1.CubeState.prototype.rotate_m,
+            cube_state_1.CubeState.prototype.rotate_m_ccw,
+            cube_state_1.CubeState.prototype.rotate_m2,
+            cube_state_1.CubeState.prototype.rotate_l,
+            cube_state_1.CubeState.prototype.rotate_l_ccw,
+            cube_state_1.CubeState.prototype.rotate_l2,
+            cube_state_1.CubeState.prototype.rotate_u,
+            cube_state_1.CubeState.prototype.rotate_u_ccw,
+            cube_state_1.CubeState.prototype.rotate_u2,
+            cube_state_1.CubeState.prototype.rotate_e,
+            cube_state_1.CubeState.prototype.rotate_e_ccw,
+            cube_state_1.CubeState.prototype.rotate_e2,
+            cube_state_1.CubeState.prototype.rotate_d,
+            cube_state_1.CubeState.prototype.rotate_d_ccw,
+            cube_state_1.CubeState.prototype.rotate_d2,
+            cube_state_1.CubeState.prototype.rotate_f,
+            cube_state_1.CubeState.prototype.rotate_f_ccw,
+            cube_state_1.CubeState.prototype.rotate_f2,
+            cube_state_1.CubeState.prototype.rotate_s,
+            cube_state_1.CubeState.prototype.rotate_s_ccw,
+            cube_state_1.CubeState.prototype.rotate_s2,
+            cube_state_1.CubeState.prototype.rotate_b,
+            cube_state_1.CubeState.prototype.rotate_b_ccw,
+            cube_state_1.CubeState.prototype.rotate_b2,
+        ];
+        let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
+        for (let i = 0; i < num_moves; ++i) {
+            let chosen_move = moves[Math.floor(Math.random() * moves.length)];
+            current_state = chosen_move.call(current_state);
+        }
     });
-    let solve = document.getElementById("solve");
-    solve.addEventListener("click", function (_e) {
+    let solve_button = document.getElementById("solve");
+    solve_button.addEventListener("click", function (_e) {
         let solver = new cube_solver_1.CubeSolver(current_state);
         while (!solver.solved()) {
             solver.step();
         }
+    });
+    let anim_time_slider = document.getElementById("anim-time");
+    anim_time_slider.addEventListener("change", function (_e) {
+        anim_time = Number.parseFloat(anim_time_slider.value);
+        console.log(`New animation time: ${anim_time}`);
     });
 });

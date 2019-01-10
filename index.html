@@ -18,6 +18,10 @@ div
 {
     display: none;
 }
+#anim-div
+{
+    float: right;
+}
 </style>
 
 <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
@@ -25,12 +29,16 @@ div
 
 <div id="expand">
     <label>Type an algorithm: </label>
-    <input type="text" size="auto" />
+    <input id="algo-text" type="text" size="auto" />
 </div>
 <div>
     <button id="reset">Reset</button>
     <button id="scramble">Scramble</button>
     <button id="solve">Solve</button>
+    <div id="anim-div">
+        <label for="anim-time">Animation time:</label>
+        <input id="anim-time" type="range" min="0" max="1" value="0" step="0.01" />
+    </div>
 </div>
 <canvas id="gl-canvas" width="1280" height="720">
 Oops ... your browser doesn't support the HTML5 canvas element

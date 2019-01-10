@@ -1,11 +1,11 @@
 import { CubeState, Cubie } from "./cube_state";
 import quat from "./tsm/quat";
-import vec3 from "./tsm/vec3";
 
+// TODO: undo functionality?
 class CubeAnimator {
     private states: CubeState[];
     private time: number = 0.0;
-    // TODO: a setter for animation_duration that adjusts time to preserve the current angle of the pending rotation
+    // TODO: (low priority) a setter for animation_duration that adjusts time to preserve the current angle of the pending rotation
     animation_duration: number;
 
     constructor(animation_duration = 0) {

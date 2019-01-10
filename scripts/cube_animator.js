@@ -1,6 +1,7 @@
 define(["require", "exports", "./cube_state", "./tsm/quat"], function (require, exports, cube_state_1, quat_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    // TODO: undo functionality?
     class CubeAnimator {
         constructor(animation_duration = 0) {
             this.time = 0.0;

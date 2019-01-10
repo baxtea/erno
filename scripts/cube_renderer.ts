@@ -1,6 +1,5 @@
 import { CubeState, Cubie } from "./cube_state";
 import mat4 from "../../Common/tsm/mat4";
-import fscreen from "./fscreen";
 import vec3 from "../../Common/tsm/vec3";
 import quat from "../../Common/tsm/quat";
 
@@ -40,8 +39,6 @@ function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src
 class CubeRenderer {
     gl: WebGLRenderingContext;
     canvas: HTMLCanvasElement;
-    readonly init_canvas_w: number;
-    readonly init_canvas_h: number;
 
     model: mat4
     view: mat4;
@@ -60,10 +57,6 @@ class CubeRenderer {
     face_colors: vec3[];
 
     constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
-        this.init_canvas_w = canvas.width;
-        this.init_canvas_h = canvas.height;
-
         // Create the WebGL context with the best avavilable implementation
         const names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
         this.gl = null;
@@ -220,24 +213,9 @@ void main() {
         this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
 
-    /**
-     * Also adjusts the canvas dimensions (and the OpenGL viewport and projection matrix to match)
-     *
-     * For a successful fullscreen request, should be called in some sort of input callback (mouse or keyboard both work)
-     */
-    toggle_fullscreen(): void {
-        if (fscreen.fullscreenElement == null) {
-            this.canvas.width = screen.width;
-            this.canvas.height = screen.height;
-            fscreen.requestFullscreen(this.canvas);
-        }
-        else {
-            fscreen.exitFullscreen();
-            this.canvas.width = this.init_canvas_w;
-            this.canvas.height = this.init_canvas_h;
-        }
-        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-        this.projection = mat4.perspective(60, this.canvas.width/this.canvas.height, 0.1, 100.0);
+    change_viewport(canvas: HTMLCanvasElement) {
+        this.gl.viewport(0, 0, canvas.width, canvas.height);
+        this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
     /**
      * ! Requires the position attribute enabled

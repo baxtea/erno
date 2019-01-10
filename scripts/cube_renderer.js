@@ -1,4 +1,4 @@
-define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Common/tsm/vec3", "../../Common/tsm/quat"], function (require, exports, mat4_1, fscreen_1, vec3_1, quat_1) {
+define(["require", "exports", "../../Common/tsm/mat4", "../../Common/tsm/vec3", "../../Common/tsm/quat"], function (require, exports, mat4_1, vec3_1, quat_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function makeShaderProgram(gl, vert_src, frag_src) {
@@ -31,9 +31,6 @@ define(["require", "exports", "../../Common/tsm/mat4", "./fscreen", "../../Commo
      */
     class CubeRenderer {
         constructor(canvas) {
-            this.canvas = canvas;
-            this.init_canvas_w = canvas.width;
-            this.init_canvas_h = canvas.height;
             // Create the WebGL context with the best avavilable implementation
             const names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
             this.gl = null;
@@ -181,24 +178,9 @@ void main() {
             this.view = mat4_1.default.lookAt(new vec3_1.default([2, 2, 5]), vec3_1.default.zero);
             this.projection = mat4_1.default.perspective(60, canvas.width / canvas.height, 0.1, 100.0);
         }
-        /**
-         * Also adjusts the canvas dimensions (and the OpenGL viewport and projection matrix to match)
-         *
-         * For a successful fullscreen request, should be called in some sort of input callback (mouse or keyboard both work)
-         */
-        toggle_fullscreen() {
-            if (fscreen_1.default.fullscreenElement == null) {
-                this.canvas.width = screen.width;
-                this.canvas.height = screen.height;
-                fscreen_1.default.requestFullscreen(this.canvas);
-            }
-            else {
-                fscreen_1.default.exitFullscreen();
-                this.canvas.width = this.init_canvas_w;
-                this.canvas.height = this.init_canvas_h;
-            }
-            this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-            this.projection = mat4_1.default.perspective(60, this.canvas.width / this.canvas.height, 0.1, 100.0);
+        change_viewport(canvas) {
+            this.gl.viewport(0, 0, canvas.width, canvas.height);
+            this.projection = mat4_1.default.perspective(60, canvas.width / canvas.height, 0.1, 100.0);
         }
         /**
          * ! Requires the position attribute enabled

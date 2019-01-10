@@ -2,8 +2,29 @@
 <meta charset="utf-8" />
 <html>
 
+<style>
+div
+{
+    padding-right: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+#expand > *
+{
+    width: 100%;
+}
+</style>
+
 <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
 <body>
+
+<div id="expand">
+    <label>Type an algorithm: </label>
+    <input type="text" size="auto" />
+</div>
+<div>
+    <button onclick="scramble()">Scramble</button>
+</div>
 <canvas id="gl-canvas" width="1280" height="720">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>

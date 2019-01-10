@@ -259,8 +259,7 @@ anim_time_slider.addEventListener("change", function(_e) {
 
 let algorithm_text = <HTMLInputElement> document.getElementById("algo-text");
 function run_text_algorithm(): void {
-    var sandbox = new CubeAnimator(animator.animation_duration);
-    sandbox.set_state(animator.get_current_state());
+    var sandbox = [];
     var errors = false;
     algorithm_text.value.split(" ")
         .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
@@ -270,11 +269,11 @@ function run_text_algorithm(): void {
                 alert(`Unrecognized move ${move_name}`);
                 errors = true;
             }
-            sandbox.push_rotation(move_func);
+            sandbox.push(move_func);
         });
 
     if (!errors)
-        animator = sandbox;
+        sandbox.forEach(rot => animator.push_rotation(rot));
 }
 
 function invert_algorithm(alg: string): string {

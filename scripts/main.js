@@ -244,8 +244,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     });
     let algorithm_text = document.getElementById("algo-text");
     function run_text_algorithm() {
-        var sandbox = new cube_animator_1.CubeAnimator(animator.animation_duration);
-        sandbox.set_state(animator.get_current_state());
+        var sandbox = [];
         var errors = false;
         algorithm_text.value.split(" ")
             .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
@@ -255,10 +254,10 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
                 alert(`Unrecognized move ${move_name}`);
                 errors = true;
             }
-            sandbox.push_rotation(move_func);
+            sandbox.push(move_func);
         });
         if (!errors)
-            animator = sandbox;
+            sandbox.forEach(rot => animator.push_rotation(rot));
     }
     function invert_algorithm(alg) {
         var invert = "";

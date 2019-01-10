@@ -41,7 +41,7 @@ class CubeState {
     };
 
     copy(): CubeState {
-        return new CubeState( this.cubies.map(Cubie.prototype.copy) );
+        return new CubeState( this.cubies.map(c => c.copy()) );
     }
 
     // White on top, green facing the camera

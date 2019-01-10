@@ -208,7 +208,8 @@ anim_time_slider.addEventListener("change", function(_e) {
 
 let algorithm_text = <HTMLInputElement> document.getElementById("algo-text");
 function run_text_algorithm(): void {
-    var sandbox = animator.get_current_state();
+    var sandbox = new CubeAnimator(animator.animation_duration);
+    sandbox.set_state(animator.get_current_state());
     var errors = false;
     algorithm_text.value.split(" ")
         .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
@@ -218,11 +219,11 @@ function run_text_algorithm(): void {
                 alert(`Unrecognized move ${move_name}`);
                 errors = true;
             }
-            sandbox = move_func.call(sandbox);
+            sandbox.push_rotation(move_func);
         });
 
     if (!errors)
-        animator.set_state(sandbox);
+        animator = sandbox;
 }
 algorithm_text.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });
 canvas.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });

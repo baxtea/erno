@@ -43,7 +43,8 @@ class CubeAnimator {
                 // TODO: do radial interpolation instead of linear
                 // * Maybe that's not smart actually. Smallest distance between two orientations is probably not along a world-space axis
                 let interp_orientation = quat.mix(c0.orientation, c1.orientation, t);
-                let interp_offset = vec3.mix(c0.position, c1.position, t); // Can probably use orientation to make this better
+                let interp_offset = interp_orientation.multiplyVec3(c1.position);
+                //let interp_offset = vec3.mix(c0.position, c1.position, t); // Can probably use orientation to make this better: interp_orientation.multiplyVec3 doesn't work though...
 
                 return new Cubie(interp_offset, c0.faces, interp_orientation);
             });
@@ -52,7 +53,7 @@ class CubeAnimator {
     }
 
     get_current_state(): CubeState {
-        return this.states[this.states.length-1]; // TODO: this leaks data
+        return this.states[this.states.length-1].copy();
     }
 
     end_animation(): void {

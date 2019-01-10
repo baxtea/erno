@@ -32,7 +32,7 @@ define(["require", "exports", "./tsm/vec3", "./tsm/quat"], function (require, ex
         }
         ;
         copy() {
-            return new CubeState(this.cubies.map(Cubie.prototype.copy));
+            return new CubeState(this.cubies.map(c => c.copy()));
         }
         // White on top, green facing the camera
         static default() {

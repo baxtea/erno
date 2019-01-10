@@ -1,4 +1,4 @@
-define(["require", "exports", "./cube_state", "./tsm/quat", "./tsm/vec3"], function (require, exports, cube_state_1, quat_1, vec3_1) {
+define(["require", "exports", "./cube_state", "./tsm/quat"], function (require, exports, cube_state_1, quat_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class CubeAnimator {
@@ -32,13 +32,14 @@ define(["require", "exports", "./cube_state", "./tsm/quat", "./tsm/vec3"], funct
                 // TODO: do radial interpolation instead of linear
                 // * Maybe that's not smart actually. Smallest distance between two orientations is probably not along a world-space axis
                 let interp_orientation = quat_1.default.mix(c0.orientation, c1.orientation, t);
-                let interp_offset = vec3_1.default.mix(c0.position, c1.position, t); // Can probably use orientation to make this better
+                let interp_offset = interp_orientation.multiplyVec3(c1.position);
+                //let interp_offset = vec3.mix(c0.position, c1.position, t); // Can probably use orientation to make this better: interp_orientation.multiplyVec3 doesn't work though...
                 return new cube_state_1.Cubie(interp_offset, c0.faces, interp_orientation);
             });
             return new cube_state_1.CubeState(cubies);
         }
         get_current_state() {
-            return this.states[this.states.length - 1]; // TODO: this leaks data
+            return this.states[this.states.length - 1].copy();
         }
         end_animation() {
             this.set_state(this.states[this.states.length - 1]);

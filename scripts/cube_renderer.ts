@@ -274,7 +274,7 @@ void main() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
         gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
 
-        let cube_model = mat4.identity.copy().translate(cubie.position);
+        let cube_model = mat4.identity.copy().translate(cubie.position).multiply(cubie.orientation.toMat4());
         gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(cube_model).all());
         gl.uniform3f(this.uColor, 0, 0, 0);
         gl.uniform3f(this.uScale, 1.0, 1.0, 1.0);

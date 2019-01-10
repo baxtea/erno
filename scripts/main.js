@@ -200,7 +200,8 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     });
     let algorithm_text = document.getElementById("algo-text");
     function run_text_algorithm() {
-        var sandbox = animator.get_current_state();
+        var sandbox = new cube_animator_1.CubeAnimator(animator.animation_duration);
+        sandbox.set_state(animator.get_current_state());
         var errors = false;
         algorithm_text.value.split(" ")
             .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
@@ -210,10 +211,10 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
                 alert(`Unrecognized move ${move_name}`);
                 errors = true;
             }
-            sandbox = move_func.call(sandbox);
+            sandbox.push_rotation(move_func);
         });
         if (!errors)
-            animator.set_state(sandbox);
+            animator = sandbox;
     }
     algorithm_text.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter")
         run_text_algorithm(); });

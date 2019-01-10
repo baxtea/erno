@@ -9,7 +9,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     canvas.tabIndex = 0; // Force the canvas to respond to keyboard events
     canvas.style.outline = "none";
     canvas.addEventListener("keydown", function (e) {
-        if (e.key.toLowerCase() == "enter") {
+        if (e.key == " ") {
             if (fscreen_1.default.fullscreenElement == null)
                 fscreen_1.default.requestFullscreen(canvas);
             else
@@ -176,7 +176,66 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     });
     let anim_time_slider = document.getElementById("anim-time");
     anim_time_slider.addEventListener("change", function (_e) {
-        anim_time = Number.parseFloat(anim_time_slider.value);
+        anim_time = anim_time_slider.valueAsNumber;
         console.log(`New animation time: ${anim_time}`);
     });
+    let algorithm_text = document.getElementById("algo-text");
+    function run_text_algorithm() {
+        let moves = new Map([
+            ["R", cube_state_1.CubeState.prototype.rotate_r],
+            ["R\'", cube_state_1.CubeState.prototype.rotate_r_ccw],
+            ["R2", cube_state_1.CubeState.prototype.rotate_r2],
+            ["M", cube_state_1.CubeState.prototype.rotate_m],
+            ["M\'", cube_state_1.CubeState.prototype.rotate_m_ccw],
+            ["M2", cube_state_1.CubeState.prototype.rotate_m2],
+            ["L", cube_state_1.CubeState.prototype.rotate_l],
+            ["L\'", cube_state_1.CubeState.prototype.rotate_l_ccw],
+            ["L2", cube_state_1.CubeState.prototype.rotate_l2],
+            ["U", cube_state_1.CubeState.prototype.rotate_u],
+            ["U\'", cube_state_1.CubeState.prototype.rotate_u_ccw],
+            ["U2", cube_state_1.CubeState.prototype.rotate_u2],
+            ["E", cube_state_1.CubeState.prototype.rotate_e],
+            ["E\'", cube_state_1.CubeState.prototype.rotate_e_ccw],
+            ["E2", cube_state_1.CubeState.prototype.rotate_e2],
+            ["D", cube_state_1.CubeState.prototype.rotate_d],
+            ["D\'", cube_state_1.CubeState.prototype.rotate_d_ccw],
+            ["D2", cube_state_1.CubeState.prototype.rotate_d2],
+            ["F", cube_state_1.CubeState.prototype.rotate_f],
+            ["F\'", cube_state_1.CubeState.prototype.rotate_f_ccw],
+            ["F2", cube_state_1.CubeState.prototype.rotate_f2],
+            ["S", cube_state_1.CubeState.prototype.rotate_s],
+            ["S\'", cube_state_1.CubeState.prototype.rotate_s_ccw],
+            ["S2", cube_state_1.CubeState.prototype.rotate_s2],
+            ["B", cube_state_1.CubeState.prototype.rotate_b],
+            ["B\'", cube_state_1.CubeState.prototype.rotate_b_ccw],
+            ["B2", cube_state_1.CubeState.prototype.rotate_b2],
+            ["X", cube_state_1.CubeState.prototype.rotate_x],
+            ["X\'", cube_state_1.CubeState.prototype.rotate_x_ccw],
+            ["X2", cube_state_1.CubeState.prototype.rotate_x2],
+            ["Y", cube_state_1.CubeState.prototype.rotate_y],
+            ["Y\'", cube_state_1.CubeState.prototype.rotate_y_ccw],
+            ["Y2", cube_state_1.CubeState.prototype.rotate_y2],
+            ["Z", cube_state_1.CubeState.prototype.rotate_z],
+            ["Z\'", cube_state_1.CubeState.prototype.rotate_z_ccw],
+            ["Z2", cube_state_1.CubeState.prototype.rotate_z2],
+        ]);
+        var sandbox = current_state;
+        var errors = false;
+        algorithm_text.value.split(" ")
+            .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
+            .forEach(move_name => {
+            let move_func = moves.get(move_name.toUpperCase());
+            if (move_func === undefined) {
+                alert(`Unrecognized move ${move_name}`);
+                errors = true;
+            }
+            sandbox = move_func.call(sandbox);
+        });
+        if (!errors)
+            current_state = sandbox;
+    }
+    algorithm_text.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter")
+        run_text_algorithm(); });
+    canvas.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter")
+        run_text_algorithm(); });
 });

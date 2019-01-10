@@ -12,7 +12,7 @@ let renderer = new CubeRenderer(canvas);
 canvas.tabIndex = 0; // Force the canvas to respond to keyboard events
 canvas.style.outline = "none";
 canvas.addEventListener("keydown", function(e) {
-    if (e.key.toLowerCase() == "enter") {
+    if (e.key == " ") {
         if (fscreen.fullscreenElement == null)
             fscreen.requestFullscreen(canvas);
         else
@@ -180,6 +180,69 @@ solve_button.addEventListener("click", function(_e) {
 
 let anim_time_slider = <HTMLInputElement> document.getElementById("anim-time");
 anim_time_slider.addEventListener("change", function(_e) {
-    anim_time = Number.parseFloat(anim_time_slider.value);
+    anim_time = anim_time_slider.valueAsNumber;
     console.log(`New animation time: ${anim_time}`);
-})
+});
+
+let algorithm_text = <HTMLInputElement> document.getElementById("algo-text");
+function run_text_algorithm(): void {
+    let moves = new Map([
+        ["R",   CubeState.prototype.rotate_r],
+        ["R\'", CubeState.prototype.rotate_r_ccw],
+        ["R2",  CubeState.prototype.rotate_r2],
+        ["M",   CubeState.prototype.rotate_m],
+        ["M\'", CubeState.prototype.rotate_m_ccw],
+        ["M2",  CubeState.prototype.rotate_m2],
+        ["L",   CubeState.prototype.rotate_l],
+        ["L\'", CubeState.prototype.rotate_l_ccw],
+        ["L2",  CubeState.prototype.rotate_l2],
+
+        ["U",   CubeState.prototype.rotate_u],
+        ["U\'", CubeState.prototype.rotate_u_ccw],
+        ["U2",  CubeState.prototype.rotate_u2],
+        ["E",   CubeState.prototype.rotate_e],
+        ["E\'", CubeState.prototype.rotate_e_ccw],
+        ["E2",  CubeState.prototype.rotate_e2],
+        ["D",   CubeState.prototype.rotate_d],
+        ["D\'", CubeState.prototype.rotate_d_ccw],
+        ["D2",  CubeState.prototype.rotate_d2],
+
+        ["F",   CubeState.prototype.rotate_f],
+        ["F\'", CubeState.prototype.rotate_f_ccw],
+        ["F2",  CubeState.prototype.rotate_f2],
+        ["S",   CubeState.prototype.rotate_s],
+        ["S\'", CubeState.prototype.rotate_s_ccw],
+        ["S2",  CubeState.prototype.rotate_s2],
+        ["B",   CubeState.prototype.rotate_b],
+        ["B\'", CubeState.prototype.rotate_b_ccw],
+        ["B2",  CubeState.prototype.rotate_b2],
+
+        ["X",   CubeState.prototype.rotate_x],
+        ["X\'", CubeState.prototype.rotate_x_ccw],
+        ["X2",  CubeState.prototype.rotate_x2],
+        ["Y",   CubeState.prototype.rotate_y],
+        ["Y\'", CubeState.prototype.rotate_y_ccw],
+        ["Y2",  CubeState.prototype.rotate_y2],
+        ["Z",   CubeState.prototype.rotate_z],
+        ["Z\'", CubeState.prototype.rotate_z_ccw],
+        ["Z2",  CubeState.prototype.rotate_z2],
+    ]);
+
+    var sandbox = current_state;
+    var errors = false;
+    algorithm_text.value.split(" ")
+        .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
+        .forEach(move_name => {
+            let move_func = moves.get(move_name.toUpperCase());
+            if (move_func === undefined) {
+                alert(`Unrecognized move ${move_name}`);
+                errors = true;
+            }
+            sandbox = move_func.call(sandbox);
+        });
+
+    if (!errors)
+        current_state = sandbox;
+}
+algorithm_text.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });
+canvas.addEventListener("keydown", e => { if (e.key.toLowerCase() == "enter") run_text_algorithm(); });

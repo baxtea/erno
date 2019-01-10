@@ -87,6 +87,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
             this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
             return new CubeState(cubies);
         }
+        rotate_r2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.right, Math.PI);
+            this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
+            return new CubeState(cubies);
+        }
         rotate_l() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.right, Math.PI / 2);
@@ -96,6 +102,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
         rotate_l_ccw() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.right, -Math.PI / 2);
+            this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
+            return new CubeState(cubies);
+        }
+        rotate_l2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.right, Math.PI);
             this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
             return new CubeState(cubies);
         }
@@ -111,6 +123,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
             this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
             return new CubeState(cubies);
         }
+        rotate_u2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI);
+            this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
+            return new CubeState(cubies);
+        }
         rotate_d() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2);
@@ -120,6 +138,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
         rotate_d_ccw() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.up, -Math.PI / 2);
+            this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
+            return new CubeState(cubies);
+        }
+        rotate_d2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI);
             this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
             return new CubeState(cubies);
         }
@@ -135,6 +159,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
             this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
             return new CubeState(cubies);
         }
+        rotate_f2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.forward, Math.PI);
+            this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
+            return new CubeState(cubies);
+        }
         rotate_b() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.forward, Math.PI / 2);
@@ -144,6 +174,12 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
         rotate_b_ccw() {
             var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
             let rot = quat_1.default.fromAxisAngle(vec3_1.default.forward, -Math.PI / 2);
+            this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
+            return new CubeState(cubies);
+        }
+        rotate_b2() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rot = quat_1.default.fromAxisAngle(vec3_1.default.forward, Math.PI);
             this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
             return new CubeState(cubies);
         }

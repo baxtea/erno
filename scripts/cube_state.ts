@@ -101,6 +101,14 @@ class CubeState {
 
         return new CubeState(cubies);
     }
+    rotate_r2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.right, Math.PI);
+        this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
+
+        return new CubeState(cubies);
+    }
 
     rotate_l(): CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
@@ -114,6 +122,14 @@ class CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
+        this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_l2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.right, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
 
         return new CubeState(cubies);
@@ -135,6 +151,14 @@ class CubeState {
 
         return new CubeState(cubies);
     }
+    rotate_u2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.up, Math.PI);
+        this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
+
+        return new CubeState(cubies);
+    }
 
     rotate_d(): CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
@@ -148,6 +172,14 @@ class CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
+        this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_d2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.up, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
 
         return new CubeState(cubies);
@@ -169,6 +201,14 @@ class CubeState {
 
         return new CubeState(cubies);
     }
+    rotate_f2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
+        this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
+
+        return new CubeState(cubies);
+    }
 
     rotate_b(): CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
@@ -182,6 +222,14 @@ class CubeState {
         var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
+        this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_b2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
 
         return new CubeState(cubies);

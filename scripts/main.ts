@@ -102,7 +102,7 @@ scramble.addEventListener("click", function(_e) {
 
 let solve = <HTMLButtonElement> document.getElementById("solve");
 solve.addEventListener("click", function(_e) {
-    let solver = new CubeSolver(state_chain[state_chain.length-1]);
+    let solver = new CubeSolver(current_state);
     while (!solver.solved()) {
         solver.step();
     }

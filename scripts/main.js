@@ -96,7 +96,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     });
     let solve = document.getElementById("solve");
     solve.addEventListener("click", function (_e) {
-        let solver = new cube_solver_1.CubeSolver(state_chain[state_chain.length - 1]);
+        let solver = new cube_solver_1.CubeSolver(current_state);
         while (!solver.solved()) {
             solver.step();
         }

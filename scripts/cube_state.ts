@@ -96,39 +96,6 @@ class CubeState {
 
             // Apply the rotation to the cubie's orientation
             cubie.orientation = rot.copy().multiply(cubie.orientation);
-            // TODO: Snap to 90* rotations around world-space axes
-            // let angle = Math.acos(cubie.orientation.w) * 2;
-            // let sin = Math.sin(angle);
-            // let axis = new vec3(cubie.orientation.xyz).scale(1/sin).normalize();
-            // console.log(axis.x, axis.y, axis.z, angle/Math.PI);
-
-            // let angle_over_pi = angle/Math.PI
-            // var angle_snap = null;
-            // if (Math.abs(angle_over_pi)/3 < Math.abs(angle_over_pi)/4) { // Angle is in thirds
-            //     angle_snap = (Math.round(angle_over_pi * 3) % 6) / 3 * Math.PI;
-            // } else { // Angle is in quarters
-            //     angle_snap = (Math.round(angle_over_pi * 4) % 8) / 4 * Math.PI;
-            // }
-            // console.log(angle_snap / Math.PI);
-
-            // quat.fromAxisAngle(axis, angle_snap, cubie.orientation);
-            // if (angle_snap >= Math.PI) cubie.orientation.conjugate();
-            // //if (angle_snap >= Math.PI) cubie.orientation.conjugate(); // 3rd arg is output
-
-            // // let axis_possibilities = [-1, -Math.sqrt(3)/3, 0, Math.sqrt(3)/3, 1];
-            // // let axis_snap = new vec3(<[number, number, number]> axis.xyz.map(v => {
-            // //     var min_dist = Number.POSITIVE_INFINITY;
-            // //     var min_dist_i = 0;
-            // //     for (let i = 1; i < axis_possibilities.length; ++i) {
-            // //         let dist = Math.abs(axis_possibilities[i] - v);
-            // //         if (dist < min_dist)
-            // //             min_dist_i = i;
-            // //     }
-            // //     return axis_possibilities[min_dist_i];
-            // // })).normalize();
-
-            // // cubie.orientation = quat.fromAxisAngle(axis, angle);
-            // // console.log(axis_snap.x, axis_snap.y, axis_snap.z, angle/Math.PI);
         });
     }
 

@@ -8,6 +8,5 @@
     },
     "include": [
         "scripts/**/*.ts",
-        "../Common/tsm/*.ts"
     ]
 }

@@ -1,4 +1,4 @@
-define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"], function (require, exports, vec3_1, quat_1) {
+define(["require", "exports", "./tsm/vec3", "./tsm/quat"], function (require, exports, vec3_1, quat_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Face;

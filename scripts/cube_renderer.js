@@ -1,4 +1,4 @@
-define(["require", "exports", "../../Common/tsm/mat4", "../../Common/tsm/vec3", "../../Common/tsm/quat"], function (require, exports, mat4_1, vec3_1, quat_1) {
+define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat"], function (require, exports, mat4_1, vec3_1, quat_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function makeShaderProgram(gl, vert_src, frag_src) {
@@ -175,7 +175,7 @@ void main() {
             this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
             // Inititialize the model, view, and projection matrices
             this.model = mat4_1.default.identity;
-            this.view = mat4_1.default.lookAt(new vec3_1.default([2, 2, 5]), vec3_1.default.zero);
+            this.view = mat4_1.default.lookAt(new vec3_1.default([2.5, 2.5, 5]), vec3_1.default.zero);
             this.projection = mat4_1.default.perspective(60, canvas.width / canvas.height, 0.1, 100.0);
         }
         change_viewport(canvas) {

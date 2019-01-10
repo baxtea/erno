@@ -1,7 +1,7 @@
 import { CubeState, Cubie } from "./cube_state";
-import mat4 from "../../Common/tsm/mat4";
-import vec3 from "../../Common/tsm/vec3";
-import quat from "../../Common/tsm/quat";
+import mat4 from "./tsm/mat4";
+import vec3 from "./tsm/vec3";
+import quat from "./tsm/quat";
 
 function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src: string) {
     const vs = gl.createShader(gl.VERTEX_SHADER);
@@ -209,7 +209,7 @@ void main() {
 
         // Inititialize the model, view, and projection matrices
         this.model = mat4.identity;
-        this.view = mat4.lookAt(new vec3([2, 2, 5]), vec3.zero);
+        this.view = mat4.lookAt(new vec3([2.5, 2.5, 5]), vec3.zero);
         this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
 

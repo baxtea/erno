@@ -1,5 +1,5 @@
-import vec3 from "../../Common/tsm/vec3";
-import quat from "../../Common/tsm/quat";
+import vec3 from "./tsm/vec3";
+import quat from "./tsm/quat";
 
 enum Face {
     Red = 0,

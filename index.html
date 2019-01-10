@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <html>
+<head>
+    <title>Rubik's Cube Simulator</title>
+    <style>
+    div {
+        padding-right: 0.5em;
+        padding-bottom: 0.5em;
+    }
+    .expand > * {
+        width: 100%;
+    }
+    #solve {
+        display: none;
+    }
+    .options {
+        width: 100%;
+    }
+    .advanced-options {
+        float: right;
+    }
+    </style>
 
-<style>
-div {
-    padding-right: 0.5em;
-    padding-bottom: 0.5em;
-}
-.expand > * {
-    width: 100%;
-}
-#solve {
-    display: none;
-}
-.options {
-    width: 1280px;
-}
-.advanced-options {
-    float: right;
-}
-</style>
-
-<script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
+    <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
+</head>
 <body>
 
-<div class="expand">
-    <label for="algo-text">Type an algorithm (Enter to run; Shift+Enter to invert): </label>
-    <input type="text" id="algo-text" value="F R' U' F' U L' B U' B2 U' F' R' B R2 F U L U" /></label>
-</div>
-<div class="options">
-    <button id="run">Run</button>
-    <button id="invert">Invert</button>
-    <button id="reset">Reset</button>
-    <button id="scramble">Scramble</button>
-    <button id="solve">Solve</button>
-    <div class="advanced-options">
-        <label for="anim-time">Animation time:</label>
-        <input id="anim-time" type="range" min="0" max="1" value="0.2" step="0.01" />
+    <div class="expand">
+        <label for="algo-text">Type an algorithm (Enter to run; Shift+Enter to invert): </label>
+        <input type="text" id="algo-text" value="F R' U' F' U L' B U' B2 U' F' R' B R2 F U L U" /></label>
     </div>
-</div>
-<canvas id="gl-canvas" width="1280" height="720">
-Oops ... your browser doesn't support the HTML5 canvas element
-</canvas>
+    <div class="options">
+        <button id="run">Run</button>
+        <button id="invert">Invert</button>
+        <button id="reset">Reset</button>
+        <button id="scramble">Scramble</button>
+        <button id="solve">Solve</button>
+        <div class="advanced-options">
+            <label for="anim-time">Animation time:</label>
+            <input id="anim-time" type="range" min="0" max="1" value="0.2" step="0.01" />
+        </div>
+    </div>
+    <canvas id="gl-canvas" width="1280" height="720">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
 
 </body>
 </html>

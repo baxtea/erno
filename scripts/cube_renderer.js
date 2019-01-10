@@ -239,6 +239,7 @@ void main() {
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.enableVertexAttribArray(this.vPosition);
             let vp = this.projection.copy().multiply(this.view);
+            this.draw_cubie(state.cubies[26], sticker_scale, vp);
             state.cubies.forEach(cubie => {
                 this.draw_cubie(cubie, sticker_scale, vp);
             });

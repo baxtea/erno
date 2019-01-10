@@ -12,15 +12,48 @@ let renderer = new CubeRenderer(canvas);
 canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
 canvas.style.outline = "none";
 canvas.addEventListener("keydown", function(e) {
-    if (e.key.toLowerCase() == "f") {
+    if (e.key.toLowerCase() == "enter") {
         if (fscreen.fullscreenElement == null)
             fscreen.requestFullscreen(canvas);
         else
             fscreen.exitFullscreen();
     }
-    else if (e.key.toLowerCase() == "r") {
-        current_state = current_state.rotate_r();
+    else if (e.key == "\`") {
+        console.log(current_state);
     }
+    else if (e.key == "r") {
+        current_state = current_state.rotate_r();
+    } else if (e.key == "R") {
+        current_state = current_state.rotate_r_ccw();
+    }
+    else if (e.key == "l") {
+        current_state = current_state.rotate_l();
+    } else if (e.key == "L") {
+        current_state = current_state.rotate_l_ccw();
+    }
+    else if (e.key == "u") {
+        current_state = current_state.rotate_u();
+    } else if (e.key == "U") {
+        current_state = current_state.rotate_u_ccw();
+    }
+    else if (e.key == "d") {
+        current_state = current_state.rotate_d();
+    } else if (e.key == "D") {
+        current_state = current_state.rotate_d_ccw();
+    }
+    else if (e.key == "f") {
+        current_state = current_state.rotate_f();
+    } else if (e.key == "F") {
+        current_state = current_state.rotate_f_ccw();
+    }
+    else if (e.key == "b") {
+        current_state = current_state.rotate_b();
+    } else if (e.key == "B") {
+        current_state = current_state.rotate_b_ccw();
+    }
+    // else {
+    //     console.log(e.key);
+    // }
 });
 fscreen.addEventListener("fullscreenchange", function() {
     if (fscreen.fullscreenElement == null) {

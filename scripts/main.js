@@ -18,6 +18,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         else if (e.key == "\`") {
             console.log(current_state);
         }
+        // Face rotations
         else if (e.key == "r") {
             current_state = current_state.rotate_r();
         }
@@ -54,6 +55,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         else if (e.key == "B") {
             current_state = current_state.rotate_b_ccw();
         }
+        // Middle slice rotations
         else if (e.key == "m") {
             current_state = current_state.rotate_m();
         }
@@ -71,6 +73,25 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         }
         else if (e.key == "S") {
             current_state = current_state.rotate_s_ccw();
+        }
+        // Whole-cube reorientations
+        else if (e.key == "x") {
+            current_state = current_state.rotate_x();
+        }
+        else if (e.key == "X") {
+            current_state = current_state.rotate_x_ccw();
+        }
+        else if (e.key == "y") {
+            current_state = current_state.rotate_y();
+        }
+        else if (e.key == "Y") {
+            current_state = current_state.rotate_y_ccw();
+        }
+        else if (e.key == "z") {
+            current_state = current_state.rotate_z();
+        }
+        else if (e.key == "Z") {
+            current_state = current_state.rotate_z_ccw();
         }
     });
     fscreen_1.default.addEventListener("fullscreenchange", function () {

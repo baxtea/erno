@@ -319,7 +319,85 @@ class CubeState {
         return new CubeState(cubies);
     }
 
-    /// x, y, and z are whole cube reorientations
+    /// Reorients the entire cube with a rotation around the x-axis
+    rotate_x(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_x_ccw(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.right, Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_x2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.right, Math.PI);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+
+    ///Reorients the entire cube with a rotation around the y-axis
+    rotate_y(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_y_ccw(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.up, Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_y2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.up, Math.PI);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+
+    /// Reorients the entire cube with a rotation around the z-axis
+    rotate_z(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_z_ccw(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.forward, Math.PI/2);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+    rotate_z2(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
+        this.apply_rotation(cubies, rot);
+
+        return new CubeState(cubies);
+    }
+
+    // x, y, and z are whole cube reorientations
 }
 
 export {

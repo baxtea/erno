@@ -21,6 +21,7 @@ canvas.addEventListener("keydown", function(e) {
     else if (e.key == "\`") {
         console.log(current_state);
     }
+    // Face rotations
     else if (e.key == "r") {
         current_state = current_state.rotate_r();
     } else if (e.key == "R") {
@@ -51,6 +52,7 @@ canvas.addEventListener("keydown", function(e) {
     } else if (e.key == "B") {
         current_state = current_state.rotate_b_ccw();
     }
+    // Middle slice rotations
     else if (e.key == "m") {
         current_state = current_state.rotate_m();
     } else if (e.key == "M") {
@@ -65,6 +67,22 @@ canvas.addEventListener("keydown", function(e) {
         current_state = current_state.rotate_s();
     } else if (e.key == "S") {
         current_state = current_state.rotate_s_ccw();
+    }
+    // Whole-cube reorientations
+    else if (e.key == "x") {
+        current_state = current_state.rotate_x();
+    } else if (e.key == "X") {
+        current_state = current_state.rotate_x_ccw();
+    }
+    else if (e.key == "y") {
+        current_state = current_state.rotate_y();
+    } else if (e.key == "Y") {
+        current_state = current_state.rotate_y_ccw();
+    }
+    else if (e.key == "z") {
+        current_state = current_state.rotate_z();
+    } else if (e.key == "Z") {
+        current_state = current_state.rotate_z_ccw();
     }
 });
 fscreen.addEventListener("fullscreenchange", function() {

@@ -3,23 +3,17 @@
 <html>
 
 <style>
-div
-{
+div {
     padding-right: 0.5em;
     padding-bottom: 0.5em;
 }
-
-#expand > *
-{
+.expand > * {
     width: 100%;
 }
-
-#solve
-{
+#solve {
     display: none;
 }
-#anim-div
-{
+.anim-div {
     float: right;
 }
 </style>
@@ -27,15 +21,18 @@ div
 <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
 <body>
 
-<div id="expand">
+<div class="expand">
     <label>Type an algorithm: </label>
     <input id="algo-text" type="text" size="auto" />
+    <!--
+        F R' U' F' U L' B U' B2 U' F' R' B R2 F U L U // Cube in a cube in a cube
+    -->
 </div>
 <div>
     <button id="reset">Reset</button>
     <button id="scramble">Scramble</button>
     <button id="solve">Solve</button>
-    <div id="anim-div">
+    <div class="anim-div">
         <label for="anim-time">Animation time:</label>
         <input id="anim-time" type="range" min="0" max="1" value="0" step="0.01" />
     </div>

@@ -154,10 +154,10 @@ define(["require", "exports", "../../Common/tsm/mat4", "../../Common/tsm/vec3", 
             let vs = `
 attribute vec4 vPosition;
 uniform mat4 uMVP; // Pre-multiplied model,view,projection matrix
-uniform float uStickerScale;
+uniform vec3 uScale;
 
 void main() {
-    gl_Position = uMVP * vec4(uStickerScale*vPosition.xy, vPosition.z, 1.0);
+    gl_Position = uMVP * vec4(uScale * vPosition.xyz, 1.0);
 }`;
             let fs = `
 precision highp float; // Fragment shaders have no default float precision
@@ -171,7 +171,7 @@ void main() {
             gl.useProgram(this.shader);
             this.uMVP = gl.getUniformLocation(this.shader, "uMVP");
             this.uColor = gl.getUniformLocation(this.shader, "uColor");
-            this.uStickerScale = gl.getUniformLocation(this.shader, "uStickerScale");
+            this.uScale = gl.getUniformLocation(this.shader, "uScale");
             this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
             // Inititialize the model, view, and projection matrices
             this.model = mat4_1.default.identity;
@@ -185,11 +185,11 @@ void main() {
         /**
          * ! Requires the position attribute enabled
          */
-        draw_cubie(cubie, sticker_scale, vp) {
+        draw_cubie(cubie, vp) {
             let gl = this.gl;
             gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
-            gl.uniform1f(this.uStickerScale, sticker_scale);
+            gl.uniform3f(this.uScale, 0.8, 0.8, 1.0);
             for (let x = 0; x <= 1; ++x) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2 + Math.PI * x);
                 let face_orientation = cubie.orientation.copy().multiply(mirror);
@@ -231,17 +231,16 @@ void main() {
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
             gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(mat4_1.default.identity.copy().translate(cubie.position)).all());
             gl.uniform3f(this.uColor, 0, 0, 0);
-            gl.uniform1f(this.uStickerScale, 1.0);
+            gl.uniform3f(this.uScale, 1.0, 1.0, 1.0);
             gl.drawElements(gl.TRIANGLES, this.cube_index_count, gl.UNSIGNED_SHORT, 0);
         }
-        draw_state(state, sticker_scale = 0.8) {
+        draw_state(state) {
             let gl = this.gl;
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.enableVertexAttribArray(this.vPosition);
             let vp = this.projection.copy().multiply(this.view);
-            this.draw_cubie(state.cubies[26], sticker_scale, vp);
             state.cubies.forEach(cubie => {
-                this.draw_cubie(cubie, sticker_scale, vp);
+                this.draw_cubie(cubie, vp);
             });
             gl.disableVertexAttribArray(this.vPosition);
         }

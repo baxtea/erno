@@ -9,7 +9,8 @@ let init_canvas_h: number = canvas.height;
 let renderer = new CubeRenderer(canvas);
 
 // Bind F to full-screen toggle
-canvas.tabIndex = 0; // Force the canvas to respond to keyboard events
+canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
+canvas.focus();
 canvas.style.outline = "none";
 canvas.addEventListener("keydown", function(e) {
     if (e.key == " ") {
@@ -119,6 +120,47 @@ function update() {
 }
 update();
 
+let moves_dict = new Map([
+    ["R",   CubeState.prototype.rotate_r],
+    ["R\'", CubeState.prototype.rotate_r_ccw],
+    ["R2",  CubeState.prototype.rotate_r2],
+    ["M",   CubeState.prototype.rotate_m],
+    ["M\'", CubeState.prototype.rotate_m_ccw],
+    ["M2",  CubeState.prototype.rotate_m2],
+    ["L",   CubeState.prototype.rotate_l],
+    ["L\'", CubeState.prototype.rotate_l_ccw],
+    ["L2",  CubeState.prototype.rotate_l2],
+
+    ["U",   CubeState.prototype.rotate_u],
+    ["U\'", CubeState.prototype.rotate_u_ccw],
+    ["U2",  CubeState.prototype.rotate_u2],
+    ["E",   CubeState.prototype.rotate_e],
+    ["E\'", CubeState.prototype.rotate_e_ccw],
+    ["E2",  CubeState.prototype.rotate_e2],
+    ["D",   CubeState.prototype.rotate_d],
+    ["D\'", CubeState.prototype.rotate_d_ccw],
+    ["D2",  CubeState.prototype.rotate_d2],
+
+    ["F",   CubeState.prototype.rotate_f],
+    ["F\'", CubeState.prototype.rotate_f_ccw],
+    ["F2",  CubeState.prototype.rotate_f2],
+    ["S",   CubeState.prototype.rotate_s],
+    ["S\'", CubeState.prototype.rotate_s_ccw],
+    ["S2",  CubeState.prototype.rotate_s2],
+    ["B",   CubeState.prototype.rotate_b],
+    ["B\'", CubeState.prototype.rotate_b_ccw],
+    ["B2",  CubeState.prototype.rotate_b2],
+
+    ["X",   CubeState.prototype.rotate_x],
+    ["X\'", CubeState.prototype.rotate_x_ccw],
+    ["X2",  CubeState.prototype.rotate_x2],
+    ["Y",   CubeState.prototype.rotate_y],
+    ["Y\'", CubeState.prototype.rotate_y_ccw],
+    ["Y2",  CubeState.prototype.rotate_y2],
+    ["Z",   CubeState.prototype.rotate_z],
+    ["Z\'", CubeState.prototype.rotate_z_ccw],
+    ["Z2",  CubeState.prototype.rotate_z2],
+]);
 
 let reset_button = <HTMLButtonElement> document.getElementById("reset");
 reset_button.addEventListener("click", function(_e) {
@@ -126,48 +168,31 @@ reset_button.addEventListener("click", function(_e) {
     // animator.reset();
 });
 
+// ? Not sure if I want to animate this or not
+// If so, would have to be at a very high speed so it couldn't be annoying
 let scramble_button = <HTMLButtonElement> document.getElementById("scramble");
 scramble_button.addEventListener("click", function(_e) {
-    // ? Not sure if I want to animate this or not
-    // If so, would have to be at a very high speed so it couldn't be
-    let moves = [
-        CubeState.prototype.rotate_r,
-        CubeState.prototype.rotate_r_ccw,
-        CubeState.prototype.rotate_r2,
-        CubeState.prototype.rotate_m,
-        CubeState.prototype.rotate_m_ccw,
-        CubeState.prototype.rotate_m2,
-        CubeState.prototype.rotate_l,
-        CubeState.prototype.rotate_l_ccw,
-        CubeState.prototype.rotate_l2,
+    var scramble_string = "";
 
-        CubeState.prototype.rotate_u,
-        CubeState.prototype.rotate_u_ccw,
-        CubeState.prototype.rotate_u2,
-        CubeState.prototype.rotate_e,
-        CubeState.prototype.rotate_e_ccw,
-        CubeState.prototype.rotate_e2,
-        CubeState.prototype.rotate_d,
-        CubeState.prototype.rotate_d_ccw,
-        CubeState.prototype.rotate_d2,
+    // Restrict the move space to only standard face operations (can still be 180*)
+    let moves_arr = Array.from(moves_dict.entries())
+        .filter(entry => {
+            let index = ["R", "L", "U", "D", "F", "B"].indexOf(entry[0].substr(0,1));
+            return index > -1;
+        });
 
-        CubeState.prototype.rotate_f,
-        CubeState.prototype.rotate_f_ccw,
-        CubeState.prototype.rotate_f2,
-        CubeState.prototype.rotate_s,
-        CubeState.prototype.rotate_s_ccw,
-        CubeState.prototype.rotate_s2,
-        CubeState.prototype.rotate_b,
-        CubeState.prototype.rotate_b_ccw,
-        CubeState.prototype.rotate_b2,
-    ];
-
-    let num_moves = Math.floor(Math.random() * 10) + 30; // Random number of moves between 30 and 40
+    // Reset the cube so the logged scramble string is useful even when scrambled twice
+    current_state = CubeState.default();
+    let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
     for (let i = 0; i < num_moves; ++i) {
-        let chosen_move = moves[Math.floor(Math.random()*moves.length)];
-        current_state = chosen_move.call(current_state);
-        // animator.push_rotation(chosen_move);
+        let j = Math.floor(Math.random()*moves_arr.length);
+        scramble_string += ` ${moves_arr[j][0]}`
+        let move_func = moves_arr[j][1];
+        current_state = move_func.call(current_state);
+        // animator.push_rotation(move_func);
     }
+
+    console.log(`Scramble algorithm: ${scramble_string.substr(1)}`); // substr because the first character is always a space
 });
 
 let solve_button = <HTMLButtonElement> document.getElementById("solve");
@@ -186,54 +211,12 @@ anim_time_slider.addEventListener("change", function(_e) {
 
 let algorithm_text = <HTMLInputElement> document.getElementById("algo-text");
 function run_text_algorithm(): void {
-    let moves = new Map([
-        ["R",   CubeState.prototype.rotate_r],
-        ["R\'", CubeState.prototype.rotate_r_ccw],
-        ["R2",  CubeState.prototype.rotate_r2],
-        ["M",   CubeState.prototype.rotate_m],
-        ["M\'", CubeState.prototype.rotate_m_ccw],
-        ["M2",  CubeState.prototype.rotate_m2],
-        ["L",   CubeState.prototype.rotate_l],
-        ["L\'", CubeState.prototype.rotate_l_ccw],
-        ["L2",  CubeState.prototype.rotate_l2],
-
-        ["U",   CubeState.prototype.rotate_u],
-        ["U\'", CubeState.prototype.rotate_u_ccw],
-        ["U2",  CubeState.prototype.rotate_u2],
-        ["E",   CubeState.prototype.rotate_e],
-        ["E\'", CubeState.prototype.rotate_e_ccw],
-        ["E2",  CubeState.prototype.rotate_e2],
-        ["D",   CubeState.prototype.rotate_d],
-        ["D\'", CubeState.prototype.rotate_d_ccw],
-        ["D2",  CubeState.prototype.rotate_d2],
-
-        ["F",   CubeState.prototype.rotate_f],
-        ["F\'", CubeState.prototype.rotate_f_ccw],
-        ["F2",  CubeState.prototype.rotate_f2],
-        ["S",   CubeState.prototype.rotate_s],
-        ["S\'", CubeState.prototype.rotate_s_ccw],
-        ["S2",  CubeState.prototype.rotate_s2],
-        ["B",   CubeState.prototype.rotate_b],
-        ["B\'", CubeState.prototype.rotate_b_ccw],
-        ["B2",  CubeState.prototype.rotate_b2],
-
-        ["X",   CubeState.prototype.rotate_x],
-        ["X\'", CubeState.prototype.rotate_x_ccw],
-        ["X2",  CubeState.prototype.rotate_x2],
-        ["Y",   CubeState.prototype.rotate_y],
-        ["Y\'", CubeState.prototype.rotate_y_ccw],
-        ["Y2",  CubeState.prototype.rotate_y2],
-        ["Z",   CubeState.prototype.rotate_z],
-        ["Z\'", CubeState.prototype.rotate_z_ccw],
-        ["Z2",  CubeState.prototype.rotate_z2],
-    ]);
-
     var sandbox = current_state;
     var errors = false;
     algorithm_text.value.split(" ")
         .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
         .forEach(move_name => {
-            let move_func = moves.get(move_name.toUpperCase());
+            let move_func = moves_dict.get(move_name.toUpperCase());
             if (move_func === undefined) {
                 alert(`Unrecognized move ${move_name}`);
                 errors = true;

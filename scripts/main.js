@@ -54,9 +54,24 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         else if (e.key == "B") {
             current_state = current_state.rotate_b_ccw();
         }
-        // else {
-        //     console.log(e.key);
-        // }
+        else if (e.key == "m") {
+            current_state = current_state.rotate_m();
+        }
+        else if (e.key == "M") {
+            current_state = current_state.rotate_m_ccw();
+        }
+        else if (e.key == "e") {
+            current_state = current_state.rotate_e();
+        }
+        else if (e.key == "E") {
+            current_state = current_state.rotate_e_ccw();
+        }
+        else if (e.key == "s") {
+            current_state = current_state.rotate_s();
+        }
+        else if (e.key == "S") {
+            current_state = current_state.rotate_s_ccw();
+        }
     });
     fscreen_1.default.addEventListener("fullscreenchange", function () {
         if (fscreen_1.default.fullscreenElement == null) {

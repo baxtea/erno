@@ -122,7 +122,7 @@ class CubeState {
 
     /// R turns rotate the right slice
     rotate_r(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
@@ -130,7 +130,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_r_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
@@ -138,7 +138,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_r2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.x == 1), rot);
@@ -148,7 +148,7 @@ class CubeState {
 
     /// M (middle layer) turns are a turn of the slice in between slices L and R, in the direction of an L turn
     rotate_m(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == 0), rot);
@@ -156,7 +156,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_m_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == 0), rot);
@@ -164,7 +164,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_m2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.x == 0), rot);
@@ -174,7 +174,7 @@ class CubeState {
 
     /// L turns rotate the left slice
     rotate_l(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
@@ -182,7 +182,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_l_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
@@ -190,7 +190,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_l2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.x == -1), rot);
@@ -200,7 +200,7 @@ class CubeState {
 
     /// U turns rotate the top slice
     rotate_u(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
@@ -208,7 +208,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_u_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
@@ -216,7 +216,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_u2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.y == 1), rot);
@@ -226,7 +226,7 @@ class CubeState {
 
     /// E (equitorial layer) turns are a turn of the slice in between slices U and D, in the direction of a D turn
     rotate_e(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == 0), rot);
@@ -234,7 +234,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_e_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == 0), rot);
@@ -242,7 +242,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_e2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.y == 0), rot);
@@ -252,7 +252,7 @@ class CubeState {
 
     /// D turns rotate the bottom slice
     rotate_d(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
@@ -260,7 +260,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_d_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
@@ -268,7 +268,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_d2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.y == -1), rot);
@@ -278,7 +278,7 @@ class CubeState {
 
     /// F turns rotate the front slice
     rotate_f(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
@@ -286,7 +286,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_f_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
@@ -294,7 +294,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_f2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.z == 1), rot);
@@ -304,7 +304,7 @@ class CubeState {
 
     // S (standing layer) turn sare a turn of the slice in between slices F and B, in the direction of an F turn
     rotate_s(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == 0), rot);
@@ -312,7 +312,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_s_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == 0), rot);
@@ -320,7 +320,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_s2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.z == 0), rot);
@@ -330,7 +330,7 @@ class CubeState {
 
     /// B turns rotate the back slice
     rotate_b(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
@@ -338,7 +338,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_b_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
         this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
@@ -346,7 +346,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_b2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
         this.apply_rotation(cubies.filter(c => c.position.z == -1), rot);
@@ -356,7 +356,7 @@ class CubeState {
 
     /// Reorients the entire cube with a rotation around the x-axis
     rotate_x(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, -Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -364,7 +364,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_x_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -372,7 +372,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_x2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.right, Math.PI);
         this.apply_rotation(cubies, rot);
@@ -382,7 +382,7 @@ class CubeState {
 
     ///Reorients the entire cube with a rotation around the y-axis
     rotate_y(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, -Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -390,7 +390,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_y_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -398,7 +398,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_y2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.up, Math.PI);
         this.apply_rotation(cubies, rot);
@@ -408,7 +408,7 @@ class CubeState {
 
     /// Reorients the entire cube with a rotation around the z-axis
     rotate_z(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, -Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -416,7 +416,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_z_ccw(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI/2);
         this.apply_rotation(cubies, rot);
@@ -424,7 +424,7 @@ class CubeState {
         return new CubeState(cubies);
     }
     rotate_z2(): CubeState {
-        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+        var cubies = this.cubies.map(x => Object.assign({}, x));; // Creates a deep copy of this.cubies
 
         let rot = quat.fromAxisAngle(vec3.forward, Math.PI);
         this.apply_rotation(cubies, rot);

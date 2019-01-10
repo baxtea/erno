@@ -1,10 +1,11 @@
 import { CubeState } from "./cube_state";
+import { CubeAnimator } from "./cube_animator";
 
 class CubeSolver {
-    state: CubeState;
+    // state: CubeState;
 
-    constructor(initial_state: CubeState) {
-        this.state = initial_state;
+    constructor(initial_state: CubeAnimator) {
+        // this.state = initial_state;
     }
 
     solved(): boolean {

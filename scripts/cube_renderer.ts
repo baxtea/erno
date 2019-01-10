@@ -293,11 +293,6 @@ void main() {
 
         gl.disableVertexAttribArray(this.vPosition);
     }
-
-    // TODO implement interpolation
-    // interpolate(state1: CubeState, state2: CubeState, t: number): void {
-    //     // ? Move to cube_state.ts
-    // }
 }
 
 export {

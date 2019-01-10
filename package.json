@@ -13,11 +13,13 @@
   "author": "Audrey Baxter",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@types/node": "^10.12.18",
-    "@types/webgl2": "0.0.4",
     "browser-sync": "^2.26.3",
     "concurrently": "^4.0.1",
     "lite-server": "^2.4.0",
     "typescript": "^3.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "@types/webgl2": "0.0.4"
   }
 }

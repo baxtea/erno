@@ -15,6 +15,9 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
             else
                 fscreen_1.default.exitFullscreen();
         }
+        else if (e.key.toLowerCase() == "r") {
+            current_state = current_state.rotate_r();
+        }
     });
     fscreen_1.default.addEventListener("fullscreenchange", function () {
         if (fscreen_1.default.fullscreenElement == null) {
@@ -28,9 +31,8 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         renderer.change_viewport(canvas);
     });
     // Animation details
-    var state_chain = [cube_state_1.CubeState.default()];
-    var current_state = 0;
-    // var anim_time = 0.5; // Seconds it takes for one 90-degree rotation of a slice
+    var current_state = cube_state_1.CubeState.default();
+    // var anim_time = 0.5; // Seconds it takes for one slice action (usually a 90* rotation)
     // Timekeeping
     let startTime = Date.now();
     var lastTime = startTime;
@@ -39,11 +41,16 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         let currentTime = Date.now();
         let elapsed = (currentTime - lastTime) / 1000.0; // Translate units from ms to seconds
         lastTime = currentTime;
-        renderer.draw_state(state_chain[current_state]);
+        // renderer.draw_state(animator.get_interpolated_state(elapsed));
+        renderer.draw_state(current_state);
         // Recurse
         requestAnimationFrame(update);
     }
     update();
+    let reset = document.getElementById("reset");
+    reset.addEventListener("click", function (_e) {
+        current_state = cube_state_1.CubeState.default();
+    });
     let scramble = document.getElementById("scramble");
     scramble.addEventListener("click", function (_e) {
         alert("Scramble not implemented yet");

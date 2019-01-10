@@ -229,7 +229,7 @@ void main() {
 
         for (let x = 0; x <= 1; ++x) {
             let mirror = quat.fromAxisAngle(vec3.up, Math.PI/2 + Math.PI*x);
-            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
             var model = face_translation.multiply(face_orientation.toMat4());
@@ -243,7 +243,7 @@ void main() {
         }
         for (let y = 0; y <= 1; ++y) {
             let mirror = quat.fromAxisAngle(vec3.right, -Math.PI/2 + Math.PI*y);
-            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
             var model = face_translation.multiply(face_orientation.toMat4());
@@ -257,7 +257,7 @@ void main() {
         }
         for (let z = 0; z <= 1; ++z) {
             let mirror = quat.fromAxisAngle(vec3.up, Math.PI*z);
-            let face_orientation = mirror.multiply(cubie.orientation);
+            let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
             var model = face_translation.multiply(face_orientation.toMat4());

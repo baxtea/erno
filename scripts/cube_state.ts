@@ -13,9 +13,9 @@ enum Face {
 class Cubie {
     position: vec3;
     orientation: quat; // TODO: use an orientation representation less subject to floating-point errors
-    faces: Face[]; // Left, right, bottomm, top, back, front (x, y, z; negative then positive)
+    readonly faces: Face[]; // Left, right, bottomm, top, back, front (x, y, z; negative then positive)
 
-    constructor(offset: vec3, faces: Face[], orientation = quat.identity) {
+    constructor(offset: vec3, faces: Face[], orientation = quat.identity.copy()) {
         this.position = offset;
         this.orientation = orientation;
         this.faces = faces;
@@ -73,6 +73,18 @@ class CubeState {
         return new CubeState(cubies);
     }
 
+    rotate_r(): CubeState {
+        var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+
+        let rotation = quat.fromAxisAngle(vec3.right, -Math.PI/2);
+        cubies.slice(18, 27).map(cubie => {
+            rotation.multiplyVec3(cubie.position, cubie.position); // 2nd arg is an output parameter
+            //cubie.orientation = rotation.copy().multiply(cubie.orientation);
+            cubie.orientation.multiply(rotation);
+        })
+
+        return new CubeState(cubies);
+    }
     // TODO: rotate_r, rotate_r_prime, ...
 }
 

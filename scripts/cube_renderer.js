@@ -192,7 +192,7 @@ void main() {
             gl.uniform1f(this.uStickerScale, sticker_scale);
             for (let x = 0; x <= 1; ++x) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2 + Math.PI * x);
-                let face_orientation = mirror.multiply(cubie.orientation);
+                let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
                 var model = face_translation.multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);
@@ -204,7 +204,7 @@ void main() {
             }
             for (let y = 0; y <= 1; ++y) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.right, -Math.PI / 2 + Math.PI * y);
-                let face_orientation = mirror.multiply(cubie.orientation);
+                let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
                 var model = face_translation.multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);
@@ -216,7 +216,7 @@ void main() {
             }
             for (let z = 0; z <= 1; ++z) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI * z);
-                let face_orientation = mirror.multiply(cubie.orientation);
+                let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
                 var model = face_translation.multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);

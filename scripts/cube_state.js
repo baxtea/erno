@@ -12,7 +12,7 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
     })(Face || (Face = {}));
     exports.Face = Face;
     class Cubie {
-        constructor(offset, faces, orientation = quat_1.default.identity) {
+        constructor(offset, faces, orientation = quat_1.default.identity.copy()) {
             this.position = offset;
             this.orientation = orientation;
             this.faces = faces;
@@ -62,6 +62,16 @@ define(["require", "exports", "../../Common/tsm/vec3", "../../Common/tsm/quat"],
                 new Cubie(new vec3_1.default([1, 1, 0]), [null, Face.Red, null, Face.White, null, null]),
                 new Cubie(new vec3_1.default([1, 1, 1]), [null, Face.Red, null, Face.White, null, Face.Green]),
             ];
+            return new CubeState(cubies);
+        }
+        rotate_r() {
+            var cubies = this.cubies.slice(0); // Creates a copy of this.cubies
+            let rotation = quat_1.default.fromAxisAngle(vec3_1.default.right, -Math.PI / 2);
+            cubies.slice(18, 27).map(cubie => {
+                rotation.multiplyVec3(cubie.position, cubie.position); // 2nd arg is an output parameter
+                //cubie.orientation = rotation.copy().multiply(cubie.orientation);
+                cubie.orientation.multiply(rotation);
+            });
             return new CubeState(cubies);
         }
     }

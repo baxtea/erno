@@ -44,14 +44,17 @@ define(["require", "exports", "./cube_state", "./tsm/quat", "./tsm/vec3"], funct
             this.set_state(this.states[this.states.length - 1]);
         }
         get_interpolated_state(elapsed) {
-            this.time += elapsed;
+            if (this.states.length > 1)
+                this.time += elapsed;
+            else
+                this.time = 0;
             if (this.animation_duration == 0) {
                 // Immediately advance to the last state
                 this.states = [this.states[this.states.length - 1]];
             }
             else {
                 let advances = Math.floor(this.time / this.animation_duration);
-                this.time %= elapsed;
+                this.time %= this.animation_duration;
                 for (let i = 0; i < advances && this.states.length > 1; ++i) {
                     this.states.shift();
                 }

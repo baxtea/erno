@@ -60,13 +60,16 @@ class CubeAnimator {
     }
 
     get_interpolated_state(elapsed: number): CubeState {
-        this.time += elapsed;
+        if (this.states.length > 1)
+            this.time += elapsed;
+        else this.time = 0;
+
         if (this.animation_duration == 0) {
             // Immediately advance to the last state
             this.states = [ this.states[this.states.length-1] ];
         } else {
             let advances = Math.floor(this.time / this.animation_duration);
-            this.time %= elapsed;
+            this.time %= this.animation_duration;
             for (let i = 0; i < advances && this.states.length > 1; ++i) {
                 this.states.shift();
             }

@@ -9,7 +9,7 @@ let init_canvas_h: number = canvas.height;
 let renderer = new CubeRenderer(canvas);
 
 // Bind F to full-screen toggle
-canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
+canvas.tabIndex = 0; // Force the canvas to respond to keyboard events
 canvas.style.outline = "none";
 canvas.addEventListener("keydown", function(e) {
     if (e.key.toLowerCase() == "enter") {
@@ -123,6 +123,7 @@ update();
 let reset_button = <HTMLButtonElement> document.getElementById("reset");
 reset_button.addEventListener("click", function(_e) {
     current_state = CubeState.default();
+    // animator.reset();
 });
 
 let scramble_button = <HTMLButtonElement> document.getElementById("scramble");
@@ -161,10 +162,11 @@ scramble_button.addEventListener("click", function(_e) {
         CubeState.prototype.rotate_b2,
     ];
 
-    let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
+    let num_moves = Math.floor(Math.random() * 10) + 30; // Random number of moves between 30 and 40
     for (let i = 0; i < num_moves; ++i) {
         let chosen_move = moves[Math.floor(Math.random()*moves.length)];
         current_state = chosen_move.call(current_state);
+        // animator.push_rotation(chosen_move);
     }
 });
 

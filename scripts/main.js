@@ -6,7 +6,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     let init_canvas_h = canvas.height;
     let renderer = new cube_renderer_1.CubeRenderer(canvas);
     // Bind F to full-screen toggle
-    canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
+    canvas.tabIndex = 0; // Force the canvas to respond to keyboard events
     canvas.style.outline = "none";
     canvas.addEventListener("keydown", function (e) {
         if (e.key.toLowerCase() == "enter") {
@@ -125,6 +125,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     let reset_button = document.getElementById("reset");
     reset_button.addEventListener("click", function (_e) {
         current_state = cube_state_1.CubeState.default();
+        // animator.reset();
     });
     let scramble_button = document.getElementById("scramble");
     scramble_button.addEventListener("click", function (_e) {
@@ -159,10 +160,11 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
             cube_state_1.CubeState.prototype.rotate_b_ccw,
             cube_state_1.CubeState.prototype.rotate_b2,
         ];
-        let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
+        let num_moves = Math.floor(Math.random() * 10) + 30; // Random number of moves between 30 and 40
         for (let i = 0; i < num_moves; ++i) {
             let chosen_move = moves[Math.floor(Math.random() * moves.length)];
             current_state = chosen_move.call(current_state);
+            // animator.push_rotation(chosen_move);
         }
     });
     let solve_button = document.getElementById("solve");

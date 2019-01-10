@@ -13,7 +13,10 @@ div {
 #solve {
     display: none;
 }
-.anim-div {
+.options {
+    width: 1288px;
+}
+.advanced-options {
     float: right;
 }
 </style>
@@ -25,13 +28,15 @@ div {
     <label for="algo-text">Type an algorithm (Enter to run; Shift+Enter to invert): </label>
     <input type="text" id="algo-text" value="F R' U' F' U L' B U' B2 U' F' R' B R2 F U L U" /></label>
 </div>
-<div>
-    <button id="reset">Reset</button>
-    <button id="scramble">Scramble</button>
-    <button id="solve">Solve</button>
-    <div class="anim-div">
+<div class="options">
+    <button id="run">Run</button>
+    <button id="invert">Invert</button>
+    <div class="advanced-options">
         <label for="anim-time">Animation time:</label>
         <input id="anim-time" type="range" min="0" max="1" value="0.2" step="0.01" />
+        <button id="reset">Reset</button>
+        <button id="scramble">Scramble</button>
+        <button id="solve">Solve</button>
     </div>
 </div>
 <canvas id="gl-canvas" width="1280" height="720">

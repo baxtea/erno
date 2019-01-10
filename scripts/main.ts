@@ -305,3 +305,9 @@ canvas.addEventListener("keydown", e => {
         }
     }
 });
+
+let run_button = <HTMLButtonElement> document.getElementById("run");
+run_button.addEventListener("click", _e => run_text_algorithm());
+
+let invert_button = <HTMLButtonElement> document.getElementById("invert");
+invert_button.addEventListener("click", _e => { algorithm_text.value = invert_algorithm(algorithm_text.value) });

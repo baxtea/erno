@@ -7,6 +7,11 @@ class CubeSolver {
         this.state = initial_state;
     }
 
+    solved(): boolean {
+        alert("Solver not implemented!");
+        return false;
+    }
+
     step() {
         alert("Solver not implemented!");
     }

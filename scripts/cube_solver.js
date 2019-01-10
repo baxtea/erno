@@ -5,6 +5,10 @@ define(["require", "exports"], function (require, exports) {
         constructor(initial_state) {
             this.state = initial_state;
         }
+        solved() {
+            alert("Solver not implemented!");
+            return false;
+        }
         step() {
             alert("Solver not implemented!");
         }

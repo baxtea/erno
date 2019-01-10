@@ -1,6 +1,7 @@
 import { CubeRenderer } from "./cube_renderer";
 import { CubeState } from "./cube_state";
 import fscreen from "./fscreen";
+import { CubeSolver } from "./cube_solver";
 
 let canvas = <HTMLCanvasElement> document.getElementById("gl-canvas");
 let init_canvas_w: number = canvas.width;
@@ -51,3 +52,18 @@ function update() {
     requestAnimationFrame(update);
 }
 update();
+
+
+
+let scramble = <HTMLButtonElement> document.getElementById("scramble");
+scramble.addEventListener("click", function(_e) {
+    alert("Scramble not implemented yet");
+});
+
+let solve = <HTMLButtonElement> document.getElementById("solve");
+solve.addEventListener("click", function(_e) {
+    let solver = new CubeSolver(state_chain[state_chain.length-1]);
+    while (!solver.solved()) {
+        solver.step();
+    }
+});

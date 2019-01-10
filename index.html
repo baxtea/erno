@@ -13,6 +13,11 @@ div
 {
     width: 100%;
 }
+
+#solve
+{
+    display: none;
+}
 </style>
 
 <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
@@ -23,7 +28,8 @@ div
     <input type="text" size="auto" />
 </div>
 <div>
-    <button onclick="scramble()">Scramble</button>
+    <button id="scramble">Scramble</button>
+    <button id="solve">Solve</button>
 </div>
 <canvas id="gl-canvas" width="1280" height="720">
 Oops ... your browser doesn't support the HTML5 canvas element

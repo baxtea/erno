@@ -1,4 +1,4 @@
-define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen"], function (require, exports, cube_renderer_1, cube_state_1, fscreen_1) {
+define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", "./cube_solver"], function (require, exports, cube_renderer_1, cube_state_1, fscreen_1, cube_solver_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     let canvas = document.getElementById("gl-canvas");
@@ -44,4 +44,15 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen"], f
         requestAnimationFrame(update);
     }
     update();
+    let scramble = document.getElementById("scramble");
+    scramble.addEventListener("click", function (_e) {
+        alert("Scramble not implemented yet");
+    });
+    let solve = document.getElementById("solve");
+    solve.addEventListener("click", function (_e) {
+        let solver = new cube_solver_1.CubeSolver(state_chain[state_chain.length - 1]);
+        while (!solver.solved()) {
+            solver.step();
+        }
+    });
 });

@@ -3,6 +3,8 @@ import { CubeState } from "./cube_state";
 import fscreen from "./fscreen";
 import { CubeSolver } from "./cube_solver";
 import { CubeAnimator } from "./cube_animator";
+import quat from "./tsm/quat";
+import vec3 from "./tsm/vec3";
 
 let canvas = <HTMLCanvasElement> document.getElementById("gl-canvas");
 let init_canvas_w: number = canvas.width;
@@ -15,7 +17,9 @@ let text_canvas = <HTMLCanvasElement> document.getElementById("text-canvas");
 let ctx2d = text_canvas.getContext("2d");
 var show_help = true;
 
-// Bind F to full-screen toggle
+var rotx = quat.identity.copy();
+var roty = quat.identity.copy();
+
 text_canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
 text_canvas.focus();
 text_canvas.style.outline = "none";
@@ -93,6 +97,21 @@ text_canvas.addEventListener("keydown", function(e) {
         animator.push_rotation(CubeState.prototype.rotate_z_ccw);
     }
 });
+text_canvas.addEventListener("mouseleave", function(_e) {
+    rotx = quat.identity.copy();
+    roty = quat.identity.copy();
+});
+text_canvas.addEventListener("mousemove", function(e) {
+    if (text_canvas === document.activeElement) {
+        let rect = canvas.getBoundingClientRect();
+        let x = (e.clientX - rect.left) / (rect.width/2) - 1;
+        let y = (rect.top - e.clientY) / (rect.height/2) + 1;
+
+        rotx = quat.fromAxisAngle(vec3.up, x**3 * Math.PI/2);
+        roty = quat.fromAxisAngle(vec3.right, y**3 * -Math.PI/2);
+    }
+});
+
 fscreen.addEventListener("fullscreenchange", function() {
     if (fscreen.fullscreenElement == null) {
         canvas.width = init_canvas_w;
@@ -120,6 +139,8 @@ function update(): void {
     let currentTime = Date.now();
     let elapsed = (currentTime - lastTime)/1000.0; // Translate units from ms to seconds
     lastTime = currentTime;
+
+    renderer.model = quat.mix(renderer.model, rotx.copy().multiply(roty), 0.25);
 
     renderer.draw_state(animator.get_interpolated_state(elapsed));
 

@@ -41,7 +41,7 @@ class CubeRenderer {
     gl: WebGLRenderingContext;
     canvas: HTMLCanvasElement;
 
-    model: mat4
+    model: quat;
     view: mat4;
     projection: mat4;
 
@@ -210,7 +210,7 @@ void main() {
         this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
 
         // Inititialize the model, view, and projection matrices
-        this.model = mat4.identity;
+        this.model = quat.identity.copy(); // mAtRIcEs
         this.view = mat4.lookAt(new vec3([2.5, 2.5, 5]), vec3.zero);
         this.projection = mat4.perspective(60, canvas.width/canvas.height, 0.1, 100.0);
     }
@@ -235,7 +235,7 @@ void main() {
             let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
-            var model = face_translation.multiply(face_orientation.toMat4());
+            var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
             let mvp = vp.copy().multiply(model);
             gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
 
@@ -249,7 +249,7 @@ void main() {
             let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
-            var model = face_translation.multiply(face_orientation.toMat4());
+            var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
             let mvp = vp.copy().multiply(model);
             gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
 
@@ -263,7 +263,7 @@ void main() {
             let face_orientation = cubie.orientation.copy().multiply(mirror);
             let face_translation = mat4.identity.copy().translate(cubie.position);
 
-            var model = face_translation.multiply(face_orientation.toMat4());
+            var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
             let mvp = vp.copy().multiply(model);
             gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
 
@@ -281,7 +281,7 @@ void main() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
         gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
 
-        let cube_model = mat4.identity.copy().translate(cubie.position).multiply(cubie.orientation.toMat4());
+        let cube_model = this.model.toMat4().translate(cubie.position).multiply(cubie.orientation.toMat4());
         gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(cube_model).all());
         gl.uniform4f(this.uColor, 0, 0, 0, this.cubie_alpha);
         gl.uniform3f(this.uScale, 1.0, 1.0, 1.0);

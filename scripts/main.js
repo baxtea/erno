@@ -1,4 +1,4 @@
-define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", "./cube_solver", "./cube_animator"], function (require, exports, cube_renderer_1, cube_state_1, fscreen_1, cube_solver_1, cube_animator_1) {
+define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", "./cube_solver", "./cube_animator", "./tsm/quat", "./tsm/vec3"], function (require, exports, cube_renderer_1, cube_state_1, fscreen_1, cube_solver_1, cube_animator_1, quat_1, vec3_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     let canvas = document.getElementById("gl-canvas");
@@ -10,7 +10,8 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     let text_canvas = document.getElementById("text-canvas");
     let ctx2d = text_canvas.getContext("2d");
     var show_help = true;
-    // Bind F to full-screen toggle
+    var rotx = quat_1.default.identity.copy();
+    var roty = quat_1.default.identity.copy();
     text_canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
     text_canvas.focus();
     text_canvas.style.outline = "none";
@@ -100,6 +101,19 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
             animator.push_rotation(cube_state_1.CubeState.prototype.rotate_z_ccw);
         }
     });
+    text_canvas.addEventListener("mouseleave", function (_e) {
+        rotx = quat_1.default.identity.copy();
+        roty = quat_1.default.identity.copy();
+    });
+    text_canvas.addEventListener("mousemove", function (e) {
+        if (text_canvas === document.activeElement) {
+            let rect = canvas.getBoundingClientRect();
+            let x = (e.clientX - rect.left) / (rect.width / 2) - 1;
+            let y = (rect.top - e.clientY) / (rect.height / 2) + 1;
+            rotx = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.pow(x, 3) * Math.PI / 2);
+            roty = quat_1.default.fromAxisAngle(vec3_1.default.right, Math.pow(y, 3) * -Math.PI / 2);
+        }
+    });
     fscreen_1.default.addEventListener("fullscreenchange", function () {
         if (fscreen_1.default.fullscreenElement == null) {
             canvas.width = init_canvas_w;
@@ -125,6 +139,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         let currentTime = Date.now();
         let elapsed = (currentTime - lastTime) / 1000.0; // Translate units from ms to seconds
         lastTime = currentTime;
+        renderer.model = quat_1.default.mix(renderer.model, rotx.copy().multiply(roty), 0.25);
         renderer.draw_state(animator.get_interpolated_state(elapsed));
         ctx2d.clearRect(0, 0, text_canvas.width, text_canvas.height);
         if (show_help) {

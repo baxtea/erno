@@ -175,7 +175,7 @@ void main() {
             this.uScale = gl.getUniformLocation(this.shader, "uScale");
             this.vPosition = gl.getAttribLocation(this.shader, "vPosition");
             // Inititialize the model, view, and projection matrices
-            this.model = mat4_1.default.identity;
+            this.model = quat_1.default.identity.copy(); // mAtRIcEs
             this.view = mat4_1.default.lookAt(new vec3_1.default([2.5, 2.5, 5]), vec3_1.default.zero);
             this.projection = mat4_1.default.perspective(60, canvas.width / canvas.height, 0.1, 100.0);
         }
@@ -196,7 +196,7 @@ void main() {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2 + Math.PI * x);
                 let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
-                var model = face_translation.multiply(face_orientation.toMat4());
+                var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[x] != null) {
@@ -208,7 +208,7 @@ void main() {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.right, -Math.PI / 2 + Math.PI * y);
                 let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
-                var model = face_translation.multiply(face_orientation.toMat4());
+                var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[2 + y] != null) {
@@ -220,7 +220,7 @@ void main() {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI * z);
                 let face_orientation = cubie.orientation.copy().multiply(mirror);
                 let face_translation = mat4_1.default.identity.copy().translate(cubie.position);
-                var model = face_translation.multiply(face_orientation.toMat4());
+                var model = this.model.toMat4().multiply(face_translation).multiply(face_orientation.toMat4());
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[4 + z] != null) {
@@ -234,7 +234,7 @@ void main() {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.cube);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
-            let cube_model = mat4_1.default.identity.copy().translate(cubie.position).multiply(cubie.orientation.toMat4());
+            let cube_model = this.model.toMat4().translate(cubie.position).multiply(cubie.orientation.toMat4());
             gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(cube_model).all());
             gl.uniform4f(this.uColor, 0, 0, 0, this.cubie_alpha);
             gl.uniform3f(this.uScale, 1.0, 1.0, 1.0);

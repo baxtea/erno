@@ -31,13 +31,13 @@ define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat", "./tsm/v
      */
     class CubeRenderer {
         constructor(canvas) {
-            this.cubie_alpha = 0.8;
+            this.cubie_alpha = 0.75;
             // Create the WebGL context with the best avavilable implementation
             const names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
             this.gl = null;
             for (let i = 0; i < names.length && this.gl == null; ++i) {
                 try {
-                    this.gl = canvas.getContext(names[i], null);
+                    this.gl = canvas.getContext(names[i], { alpha: false });
                 }
                 catch (e) { }
             }

@@ -56,7 +56,7 @@ class CubeRenderer {
     cube_indices: WebGLBuffer;
     cube_index_count: number;
     face_colors: vec4[];
-    cubie_alpha: number = 0.8;
+    cubie_alpha: number = 0.75;
 
     constructor(canvas: HTMLCanvasElement) {
         // Create the WebGL context with the best avavilable implementation
@@ -64,7 +64,7 @@ class CubeRenderer {
         this.gl = null;
         for (let i = 0; i < names.length && this.gl == null; ++i) {
             try {
-                this.gl = <WebGLRenderingContext> canvas.getContext(names[i], null);
+                this.gl = <WebGLRenderingContext> canvas.getContext(names[i], { alpha: false });
             } catch(e) {}
         }
         let gl = this.gl; // alias

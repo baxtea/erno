@@ -297,6 +297,12 @@ anim_time_slider.addEventListener("change", function(_e) {
     console.log(`New animation time: ${animator.animation_duration}`);
 });
 
+let alpha_slider = <HTMLInputElement> document.getElementById("alpha");
+alpha_slider.addEventListener("change", function(_e) {
+    renderer.cubie_alpha = alpha_slider.valueAsNumber;
+    console.log(`New cubie opacity:: ${renderer.cubie_alpha}`);
+});
+
 let algorithm_text = <HTMLInputElement> document.getElementById("algo-text");
 function run_text_algorithm(): void {
     var sandbox = [];

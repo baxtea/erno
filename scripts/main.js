@@ -276,6 +276,11 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         animator.animation_duration = anim_time_slider.valueAsNumber;
         console.log(`New animation time: ${animator.animation_duration}`);
     });
+    let alpha_slider = document.getElementById("alpha");
+    alpha_slider.addEventListener("change", function (_e) {
+        renderer.cubie_alpha = alpha_slider.valueAsNumber;
+        console.log(`New cubie opacity:: ${renderer.cubie_alpha}`);
+    });
     let algorithm_text = document.getElementById("algo-text");
     function run_text_algorithm() {
         var sandbox = [];

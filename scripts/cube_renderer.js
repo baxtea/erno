@@ -1,4 +1,4 @@
-define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat"], function (require, exports, mat4_1, vec3_1, quat_1) {
+define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat", "./tsm/vec4"], function (require, exports, mat4_1, vec3_1, quat_1, vec4_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function makeShaderProgram(gl, vert_src, frag_src) {
@@ -31,6 +31,7 @@ define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat"], functio
      */
     class CubeRenderer {
         constructor(canvas) {
+            this.cubie_alpha = 0.8;
             // Create the WebGL context with the best avavilable implementation
             const names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
             this.gl = null;
@@ -145,7 +146,7 @@ define(["require", "exports", "./tsm/mat4", "./tsm/vec3", "./tsm/quat"], functio
                 let r = (((hex) >> 16) & 0xFF) / 255.0;
                 let g = (((hex) >> 8) & 0xFF) / 255.0;
                 let b = ((hex) & 0xFF) / 255.0;
-                return new vec3_1.default([r, g, b]);
+                return new vec4_1.default([r, g, b, 1.0]);
             }
             //                   red      orange    yellow     green     blue      white
             this.face_colors = [0xb71234, 0xFF5800, 0xFFD500, 0x009B48, 0x0046AD, 0xFFFFFF].map(hex_to_rgb);
@@ -161,10 +162,10 @@ void main() {
 }`;
             let fs = `
 precision highp float; // Fragment shaders have no default float precision
-uniform vec3 uColor;
+uniform vec4 uColor;
 
 void main() {
-    gl_FragColor = vec4(uColor, 1.0);
+    gl_FragColor = uColor;
 }`;
             // Compile into a linked program and extract locations for shader variables
             this.shader = makeShaderProgram(gl, vs, fs);
@@ -185,11 +186,12 @@ void main() {
         /**
          * ! Requires the position attribute enabled
          */
-        draw_cubie(cubie, vp) {
+        draw_stickers(cubie, vp) {
             let gl = this.gl;
             gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
             gl.uniform3f(this.uScale, 0.8, 0.8, 1.0);
+            //gl.blendFunc(gl.ONE, gl.ZERO);
             for (let x = 0; x <= 1; ++x) {
                 let mirror = quat_1.default.fromAxisAngle(vec3_1.default.up, Math.PI / 2 + Math.PI * x);
                 let face_orientation = cubie.orientation.copy().multiply(mirror);
@@ -198,7 +200,7 @@ void main() {
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[x] != null) {
-                    gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[x]].xyz);
+                    gl.uniform4fv(this.uColor, this.face_colors[cubie.faces[x]].xyzw);
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
             }
@@ -210,7 +212,7 @@ void main() {
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[2 + y] != null) {
-                    gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[2 + y]].xyz);
+                    gl.uniform4fv(this.uColor, this.face_colors[cubie.faces[2 + y]].xyzw);
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
             }
@@ -222,16 +224,19 @@ void main() {
                 let mvp = vp.copy().multiply(model);
                 gl.uniformMatrix4fv(this.uMVP, false, mvp.all());
                 if (cubie.faces[4 + z] != null) {
-                    gl.uniform3fv(this.uColor, this.face_colors[cubie.faces[4 + z]].xyz);
+                    gl.uniform4fv(this.uColor, this.face_colors[cubie.faces[4 + z]].xyzw);
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
             }
+        }
+        draw_cubie(cubie, vp) {
+            let gl = this.gl;
             gl.bindBuffer(gl.ARRAY_BUFFER, this.cube);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cube_indices);
             gl.vertexAttribPointer(this.vPosition, 3, gl.FLOAT, false, 0, 0);
             let cube_model = mat4_1.default.identity.copy().translate(cubie.position).multiply(cubie.orientation.toMat4());
             gl.uniformMatrix4fv(this.uMVP, false, vp.copy().multiply(cube_model).all());
-            gl.uniform3f(this.uColor, 0, 0, 0);
+            gl.uniform4f(this.uColor, 0, 0, 0, this.cubie_alpha);
             gl.uniform3f(this.uScale, 1.0, 1.0, 1.0);
             gl.drawElements(gl.TRIANGLES, this.cube_index_count, gl.UNSIGNED_SHORT, 0);
         }
@@ -240,9 +245,20 @@ void main() {
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.enableVertexAttribArray(this.vPosition);
             let vp = this.projection.copy().multiply(this.view);
-            state.cubies.forEach(cubie => {
-                this.draw_cubie(cubie, vp);
-            });
+            gl.depthMask(true);
+            state.cubies.forEach(cubie => this.draw_stickers(cubie, vp));
+            // Write to depth only
+            gl.depthFunc(gl.LESS);
+            gl.colorMask(false, false, false, false);
+            state.cubies.forEach(cubie => this.draw_cubie(cubie, vp));
+            // Real render
+            gl.depthFunc(gl.LEQUAL);
+            gl.colorMask(true, true, true, true);
+            gl.depthMask(false);
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            state.cubies.forEach(cubie => this.draw_cubie(cubie, vp));
+            // write color with alpha blending
             gl.disableVertexAttribArray(this.vPosition);
         }
     }

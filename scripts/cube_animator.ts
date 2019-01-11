@@ -22,10 +22,6 @@ class CubeAnimator {
         this.time = 0.0;
     }
 
-    log_state(): void {
-        console.log(this.states[0]);
-    }
-
     static interpolate(s0: CubeState, s1: CubeState, t: number): CubeState {
         function zip<T, U>(a0: Array<T>, a1: Array<U>) {
             var arr: Array<[T, U]> = [];

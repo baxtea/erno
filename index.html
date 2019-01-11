@@ -20,6 +20,17 @@
     .advanced-options {
         float: right;
     }
+
+    .canvas-container {
+        position: relative;
+    }
+    #text-canvas {
+        background-color: transparent;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 10;
+    }
     </style>
 
     <script type="text/javascript" data-main="scripts/main.js" src="require.js"></script>
@@ -41,9 +52,11 @@
             <input id="anim-time" type="range" min="0" max="1" value="0.2" step="0.01" />
         </div>
     </div>
-    <canvas id="gl-canvas" width="1280" height="720">
-    Oops ... your browser doesn't support the HTML5 canvas element
-    </canvas>
-
+    <div class="canvas-container">
+        <canvas id="gl-canvas" width="1280" height="720">
+        Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+        <canvas id="text-canvas" width="1280" height="720"></canvas>
+    </div>
 </body>
 </html>

@@ -6,19 +6,23 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     let init_canvas_h = canvas.height;
     let renderer = new cube_renderer_1.CubeRenderer(canvas);
     let animator = new cube_animator_1.CubeAnimator(0.2);
+    let canvas_div = document.getElementsByClassName("canvas-container")[0];
+    let text_canvas = document.getElementById("text-canvas");
+    let ctx2d = text_canvas.getContext("2d");
+    var show_help = true;
     // Bind F to full-screen toggle
-    canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
-    canvas.focus();
-    canvas.style.outline = "none";
-    canvas.addEventListener("keydown", function (e) {
+    text_canvas.tabIndex = 1000; // Force the canvas to respond to keyboard events
+    text_canvas.focus();
+    text_canvas.style.outline = "none";
+    text_canvas.addEventListener("keydown", function (e) {
         if (e.key == " ") {
             if (fscreen_1.default.fullscreenElement == null)
-                fscreen_1.default.requestFullscreen(canvas);
+                fscreen_1.default.requestFullscreen(canvas_div);
             else
                 fscreen_1.default.exitFullscreen();
         }
-        else if (e.key == "\`") {
-            animator.log_state();
+        else if (e.key.toLowerCase() == "h") {
+            show_help = !show_help;
         }
         // Face rotations
         else if (e.key == "r") {
@@ -100,10 +104,16 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         if (fscreen_1.default.fullscreenElement == null) {
             canvas.width = init_canvas_w;
             canvas.height = init_canvas_h;
+            text_canvas.width = init_canvas_w;
+            text_canvas.height = init_canvas_h;
+            ctx2d.setTransform(1, 0, 0, 1, 0, 0);
         }
         else {
             canvas.width = screen.width;
             canvas.height = screen.height;
+            text_canvas.width = screen.width;
+            text_canvas.height = screen.height;
+            ctx2d.setTransform(screen.width / init_canvas_w, 0, 0, screen.height / init_canvas_h, 0, 0);
         }
         renderer.change_viewport(canvas);
     });
@@ -116,7 +126,31 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
         let elapsed = (currentTime - lastTime) / 1000.0; // Translate units from ms to seconds
         lastTime = currentTime;
         renderer.draw_state(animator.get_interpolated_state(elapsed));
-        // renderer.draw_state(current_state)
+        ctx2d.clearRect(0, 0, text_canvas.width, text_canvas.height);
+        if (show_help) {
+            ctx2d.font = "18px monospace";
+            var y = 7;
+            var dy = 18;
+            ctx2d.fillText("R: Rotate right slice", 15, y += dy);
+            ctx2d.fillText("L: Rotate left slice", 15, y += dy);
+            ctx2d.fillText("U: Rotate top slice", 15, y += dy);
+            ctx2d.fillText("D: Rotate bottom slice", 15, y += dy);
+            ctx2d.fillText("F: Rotate front slice", 15, y += dy);
+            ctx2d.fillText("B: Rotate back slice", 15, y += dy);
+            ctx2d.fillText("Hold shift to make a rotation counter-clockwise", 15, y += dy);
+            y = 7;
+            ctx2d.fillText("M: Rotate the middle (between L and R) slice", 320, y += dy);
+            ctx2d.fillText("E: Rotate the equitorial (between U and D) slice", 320, y += dy);
+            ctx2d.fillText("S: Rotate the standing (between F and B) slice", 320, y += dy);
+            ctx2d.fillText("X: Rotate the cube around the x axis", 320, y += dy);
+            ctx2d.fillText("Y: Rotate the cube around the y axis", 320, y += dy);
+            ctx2d.fillText("Z: Rotate the cube around the z axis", 320, y += dy);
+            y = 7;
+            ctx2d.fillText("Enter: Run algorithm", 930, y += dy);
+            ctx2d.fillText("Shift+Enter: Invert algorithm", 930, y += dy);
+            ctx2d.fillText("Space: Toggle fullscreen", 930, y += dy);
+            ctx2d.fillText("H: Toggle this help text", 930, y += dy);
+        }
         // Recurse
         requestAnimationFrame(update);
     }
@@ -199,7 +233,6 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     ]);
     let reset_button = document.getElementById("reset");
     reset_button.addEventListener("click", function (_e) {
-        // current_state = CubeState.default();
         animator.reset();
     });
     // ? Not sure if I want to animate this or not
@@ -279,7 +312,7 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
             }
         }
     });
-    canvas.addEventListener("keydown", e => {
+    text_canvas.addEventListener("keydown", e => {
         if (e.key.toLowerCase() == "enter") {
             if (e.shiftKey) {
                 algorithm_text.value = invert_algorithm(algorithm_text.value);

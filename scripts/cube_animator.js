@@ -15,9 +15,6 @@ define(["require", "exports", "./cube_state", "./tsm/quat"], function (require, 
             this.states = [state];
             this.time = 0.0;
         }
-        log_state() {
-            console.log(this.states[0]);
-        }
         static interpolate(s0, s1, t) {
             function zip(a0, a1) {
                 var arr = [];

@@ -125,6 +125,7 @@ function update(): void {
 
     ctx2d.clearRect(0, 0, text_canvas.width, text_canvas.height);
     if (show_help) {
+        // ? Are there situations where I should show the text even when toggled off? Like fade in after a period of no movements?
         ctx2d.font = "18px monospace";
         var y = 7;
         var dy = 18;
@@ -196,6 +197,8 @@ let moves_dict = new Map([
     ["Z",   CubeState.prototype.rotate_z],
     ["Z\'", CubeState.prototype.rotate_z_ccw],
     ["Z2",  CubeState.prototype.rotate_z2],
+
+    // TODO: double-layer turns
 ]);
 
 let inverse_dict = new Map([
@@ -301,12 +304,12 @@ function run_text_algorithm(): void {
     algorithm_text.value.split(" ")
         .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
         .forEach(move_name => {
-            let move_func = moves_dict.get(move_name.toUpperCase());
+            let move_func = moves_dict.get(move_name);
             if (move_func === undefined) {
-                alert(`Unrecognized move ${move_name}`);
+                alert(`Failed to run algorithm\nUnrecognized move ${move_name}`);
                 errors = true;
             }
-            sandbox.push(move_func);
+            else sandbox.push(move_func);
         });
 
     if (!errors)
@@ -315,14 +318,20 @@ function run_text_algorithm(): void {
 
 function invert_algorithm(alg: string): string {
     var invert = "";
+    var errors = false;
     alg.split(" ")
         .filter(v => v != "") // Ignore duplicate, leading, and trailing spaces
         .forEach(move_name => {
-            move_name = move_name.toUpperCase();
-            invert = ` ${inverse_dict.get(move_name)}` + invert;
+            let inv_name = inverse_dict.get(move_name);
+            if (inv_name === undefined) {
+                alert(`Failed to invert algorithm\nUnrecognized move ${move_name}`);
+                errors = true;
+            }
+            else invert = ` ${inv_name}` + invert;
         });
 
-    return invert.substr(1);
+    if (!errors) return invert.substr(1);
+    else return alg;
 }
 algorithm_text.addEventListener("keydown", e => {
     if (e.key.toLowerCase() == "enter") {

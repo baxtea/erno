@@ -327,29 +327,23 @@ define(["require", "exports", "./cube_renderer", "./cube_state", "./fscreen", ".
     let scramble_button = document.getElementById("scramble");
     scramble_button.addEventListener("click", function (_e) {
         var scramble_string = "";
-        var solution_string = "";
         // Restrict the move space to only standard face operations (can still be 180*)
-        let moves_arr = Array.from(moves_dict.entries())
-            .filter(entry => {
-            let index = ["R", "L", "U", "D", "F", "B"].indexOf(entry[0].substr(0, 1));
-            return index > -1;
-        });
+        var moves_arr = ["R", "L", "U", "D", "F", "B"];
+        moves_arr = moves_arr.concat(moves_arr.map(c => `${c}\'`), moves_arr.map(c => `${c}2`));
         let num_moves = Math.floor(Math.random() * 10) + 20; // Random number of moves between 20 and 30
         var last_move = -1;
         for (let i = 0; i < num_moves; ++i) {
             var move_index = Math.floor(Math.random() * moves_arr.length);
-            // Make sure this move doesn't undo the last one
-            while (last_move > -1 && moves_arr[move_index][0] == inverse_dict.get(moves_arr[last_move][0])) {
+            // Make sure this is turning a different face than last time
+            while (last_move > -1 && moves_arr[move_index][0] == moves_arr[last_move][0]) {
                 move_index = Math.floor(Math.random() * moves_arr.length);
             }
-            let move_func = moves_arr[move_index][1];
+            let move_func = moves_dict.get(moves_arr[move_index]);
             animator.push_rotation(move_func);
-            scramble_string += ` ${moves_arr[move_index][0]}`;
-            solution_string = ` ${inverse_dict.get(moves_arr[move_index][0])}` + solution_string;
+            scramble_string += ` ${moves_arr[move_index]}`;
             last_move = move_index;
         }
         console.log(`Scramble algorithm: ${scramble_string.substr(1)}`); // substr because the first character is always a space
-        console.log(`Solution algorithm: ${solution_string.substr(1)}`);
     });
     let solve_button = document.getElementById("solve");
     solve_button.addEventListener("click", function (_e) {

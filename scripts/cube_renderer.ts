@@ -34,9 +34,6 @@ function makeShaderProgram(gl: WebGLRenderingContext, vert_src: string, frag_src
     return program;
 }
 
-/**
- * More accurately, this is a sticker renderer
- */
 class CubeRenderer {
     gl: WebGLRenderingContext;
     canvas: HTMLCanvasElement;
@@ -72,9 +69,11 @@ class CubeRenderer {
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clearColor(0.5, 0.5, 0.5, 1);
         gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         // Create the quad used to render each sticker
-        // No index buffer, counter-clockwise so they survive backface culling
+        // No index buffer, counter-clockwise winding
         let quad_verts = new Float32Array([
             -0.5, -0.5, -0.5,
              0.5, -0.5, -0.5,
@@ -291,14 +290,16 @@ void main() {
 
     draw_state(state: CubeState): void {
         let gl = this.gl;
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        let vp = this.projection.copy().multiply(this.view);
         gl.enableVertexAttribArray(this.vPosition);
 
-        let vp = this.projection.copy().multiply(this.view);
-
+        // Re-enable depth write before rendering stickers
         gl.depthMask(true);
         state.cubies.forEach(cubie => this.draw_stickers(cubie, vp));
+
+        // * Using a z-prepass so the cubies do not blend on top of one another
 
         // Write to depth only
         gl.depthFunc(gl.LESS);
@@ -307,12 +308,9 @@ void main() {
 
         // Real render
         gl.depthFunc(gl.LEQUAL);
-        gl.colorMask(true, true, true, true);
         gl.depthMask(false);
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.colorMask(true, true, true, true);
         state.cubies.forEach(cubie => this.draw_cubie(cubie, vp));
-        // write color with alpha blending
 
         gl.disableVertexAttribArray(this.vPosition);
     }

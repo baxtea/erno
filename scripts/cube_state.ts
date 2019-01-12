@@ -410,6 +410,69 @@ class CubeState {
 
         return new CubeState(cubies);
     }
+
+    /// Rotate both right slices simultaneously
+    rotate_rw(): CubeState {
+        return this.rotate_r().rotate_m_ccw();
+    }
+    rotate_rw_ccw(): CubeState {
+        return this.rotate_r_ccw().rotate_m();
+    }
+    rotate_rw2(): CubeState {
+        return this.rotate_r2().rotate_m2();
+    }
+    /// Rotate both left slices simultaneously
+    rotate_lw(): CubeState {
+        return this.rotate_l().rotate_m();
+    }
+    rotate_lw_ccw(): CubeState {
+        return this.rotate_l_ccw().rotate_m_ccw();
+    }
+    rotate_lw2(): CubeState {
+        return this.rotate_l2().rotate_m2();
+    }
+
+    /// Rotate both top slices simultaneously
+    rotate_uw(): CubeState {
+        return this.rotate_u().rotate_e_ccw();
+    }
+    rotate_uw_ccw(): CubeState {
+        return this.rotate_u_ccw().rotate_e();
+    }
+    rotate_uw2(): CubeState {
+        return this.rotate_u2().rotate_e2();
+    }
+    /// Rotate both bottom slices simultaneously
+    rotate_dw(): CubeState {
+        return this.rotate_d().rotate_e();
+    }
+    rotate_dw_ccw(): CubeState {
+        return this.rotate_d_ccw().rotate_e_ccw();
+    }
+    rotate_dw2(): CubeState {
+        return this.rotate_d2().rotate_e2();
+    }
+
+    /// Rotate both front slices simultaneously
+    rotate_fw(): CubeState {
+        return this.rotate_f().rotate_s();
+    }
+    rotate_fw_ccw(): CubeState {
+        return this.rotate_f_ccw().rotate_s_ccw();
+    }
+    rotate_fw2(): CubeState {
+        return this.rotate_f2().rotate_s2();
+    }
+    /// Rotate both back slices simultaneously
+    rotate_bw(): CubeState {
+        return this.rotate_b().rotate_s_ccw();
+    }
+    rotate_bw_ccw(): CubeState {
+        return this.rotate_b_ccw().rotate_s();
+    }
+    rotate_bw2(): CubeState {
+        return this.rotate_b2().rotate_s2();
+    }
 }
 
 export {

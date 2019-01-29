@@ -53,7 +53,7 @@ define(["require", "exports", "./tsm/vec3", "./tsm/quat"], function (require, ex
                 new Cubie(new vec3_1.default([0, -1, 0]), [null, null, Face.Yellow, null, null, null]),
                 new Cubie(new vec3_1.default([0, -1, 1]), [null, null, Face.Yellow, null, null, Face.Green]),
                 new Cubie(new vec3_1.default([0, 0, -1]), [null, null, null, null, Face.Blue, null]),
-                new Cubie(new vec3_1.default([0, 0, 0]), [null, null, null, null, null, null]),
+                // new Cubie(new vec3([ 0,  0,  0]), [null, null, null, null, null, null]),
                 new Cubie(new vec3_1.default([0, 0, 1]), [null, null, null, null, null, Face.Green]),
                 new Cubie(new vec3_1.default([0, 1, -1]), [null, null, null, Face.White, Face.Blue, null]),
                 new Cubie(new vec3_1.default([0, 1, 0]), [null, null, null, Face.White, null, null]),

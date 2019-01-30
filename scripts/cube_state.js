@@ -18,7 +18,7 @@ define(["require", "exports", "./tsm/vec3", "./tsm/quat"], function (require, ex
             this.faces = faces;
         }
         copy() {
-            return new Cubie(this.position.copy(), this.faces.slice(0), // Shallow copy is okay because
+            return new Cubie(this.position.copy(), this.faces.slice(0), // Shallow copy is okay because faces never change
             this.orientation.copy());
         }
     }

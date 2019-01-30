@@ -24,7 +24,7 @@ class Cubie {
     copy(): Cubie {
         return new Cubie(
             this.position.copy(),
-            this.faces.slice(0), // Shallow copy is okay because
+            this.faces.slice(0), // Shallow copy is okay because faces never change
             this.orientation.copy(),
         );
     }

@@ -3,6 +3,7 @@ import quat from "./tsm/quat";
 
 // TODO: undo functionality?
 class CubeAnimator {
+    // INVARIANT: this.states can never be empty
     private states: CubeState[];
     private time: number = 0.0;
     // TODO: (low priority) a setter for animation_duration that adjusts time to preserve the current angle of the pending rotation
@@ -41,7 +42,7 @@ class CubeAnimator {
                 let angle = Math.acos(interp_orientation.w) * 2;
                 var interp_offset = c0.position;
 
-                if (angle > 0) { // nonstatic; need to interpolate
+                if (angle > 0) { // non-settled; need to interpolate
                     // diff = q2 * inverse(q1)
                     let diff = interp_orientation.copy().multiply(c0.orientation.copy().conjugate());
                     interp_offset = diff.multiplyVec3(c0.position);

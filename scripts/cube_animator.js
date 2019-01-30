@@ -30,7 +30,7 @@ define(["require", "exports", "./cube_state", "./tsm/quat"], function (require, 
                 let interp_orientation = quat_1.default.mix(c0.orientation, c1.orientation, t);
                 let angle = Math.acos(interp_orientation.w) * 2;
                 var interp_offset = c0.position;
-                if (angle > 0) { // nonstatic; need to interpolate
+                if (angle > 0) { // non-settled; need to interpolate
                     // diff = q2 * inverse(q1)
                     let diff = interp_orientation.copy().multiply(c0.orientation.copy().conjugate());
                     interp_offset = diff.multiplyVec3(c0.position);
